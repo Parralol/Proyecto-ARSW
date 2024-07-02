@@ -44,7 +44,7 @@ public class Monster extends Actor {
         }
     }
 
-    private void spawn() {
+    public void spawn() {
         Random rand = new Random();
         int rand_int1 = rand.nextInt(10);
         int rand_int2 = rand.nextInt(10);
