@@ -1,5 +1,7 @@
 package edu.escuelaing.arsw.ase.app.model;
 
+import java.util.Random;
+
 public class Monster extends Actor {
     protected int vx;
     protected static final double FIRING_FREQUENCY = 0.01;
@@ -34,9 +36,29 @@ public class Monster extends Actor {
         stage.addActor(m);
     }
 
+    public void spawn() {
+        Random rand = new Random();
+        Monster m = new Monster(stage);
+        int rand_int1 = rand.nextInt(5);
+        switch(rand_int1){
+            case 1:
+                m.setX((int) (Math.random() * Stage.WIDTH));
+                m.setY((int) (Math.random() * Stage.PLAY_HEIGHT / 2));
+                m.setVx((int) (Math.random() * 20 - 10));
+            case 2:
+                m = new Crab(stage);
+                m.setX((int) (Math.random() * Stage.WIDTH));
+                m.setY((int) (Math.random() * Stage.PLAY_HEIGHT / 2));
+                m.setVx((int) (Math.random() * 20 - 10));
+        }
+        
+        stage.addActor(m);
+    }
+
     public void collision(Actor a) {
         if (a instanceof Bullet || a instanceof Bomb) {
             remove();
+            spawn();
             stage.getPlayer().addScore(20);
         }
     }
