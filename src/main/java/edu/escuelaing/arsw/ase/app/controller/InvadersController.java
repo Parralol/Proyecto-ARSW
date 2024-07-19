@@ -29,7 +29,7 @@ public class InvadersController {
             invadersGUI.game();
         }).start();
     }
-
+/** 
     @GetMapping("/")
     public String home(Principal principal, HttpSession session) {
         incrementCount(session, HOME_VIEW_COUNT);
@@ -45,7 +45,7 @@ public class InvadersController {
         var homeViewCount = session.getAttribute(attr) == null ? 0 : (Integer) session.getAttribute(attr);
         session.setAttribute(attr, homeViewCount += 1);
     }
-
+*/
     @GetMapping(value = "/game/image", produces = "image/png")
     public byte[] getGameImage() throws IOException {
         BufferedImage gameImage = invadersGUI.getGameImage();
