@@ -1,6 +1,7 @@
 package edu.escuelaing.arsw.ase.app.controller;
 
 import edu.escuelaing.arsw.ase.app.model.InvadersGUI;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +16,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Principal;
 
-
 @RestController
 public class InvadersController {
+
+    private final String HOME_VIEW_COUNT = "HOME_VIEW_COUNT";
 
     private final InvadersGUI invadersGUI;
 
@@ -27,12 +29,23 @@ public class InvadersController {
             invadersGUI.game();
         }).start();
     }
-    
+
     @GetMapping("/")
-    public String home(Principal principal){
+    public String home(Principal principal, HttpSession session) {
+        incrementCount(session, HOME_VIEW_COUNT);
         return "hello, " + principal.getName();
     }
-    
+
+    @GetMapping("/count")
+    public String count(HttpSession session) {
+        return "HOME VIEW COUNT: " + session.getAttribute(HOME_VIEW_COUNT);
+    }
+
+    private void incrementCount(HttpSession session, String attr) {
+        var homeViewCount = session.getAttribute(attr) == null ? 0 : (Integer) session.getAttribute(attr);
+        session.setAttribute(attr, homeViewCount += 1);
+    }
+
     @GetMapping(value = "/game/image", produces = "image/png")
     public byte[] getGameImage() throws IOException {
         BufferedImage gameImage = invadersGUI.getGameImage();
@@ -45,13 +58,12 @@ public class InvadersController {
     @CrossOrigin
     public void handleKeyEvent(@RequestBody KeyEventDTO keyEventDTO) {
         KeyEvent keyEvent = new KeyEvent(
-            invadersGUI,
-            keyEventDTO.getType().equals("keydown") ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED,
-            System.currentTimeMillis(),
-            0,
-            keyEventDTO.getKeyCode(),
-            KeyEvent.CHAR_UNDEFINED
-        );
+                invadersGUI,
+                keyEventDTO.getType().equals("keydown") ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED,
+                System.currentTimeMillis(),
+                0,
+                keyEventDTO.getKeyCode(),
+                KeyEvent.CHAR_UNDEFINED);
         if (keyEventDTO.getType().equals("keydown")) {
             invadersGUI.keyPressed(keyEvent);
         } else {
