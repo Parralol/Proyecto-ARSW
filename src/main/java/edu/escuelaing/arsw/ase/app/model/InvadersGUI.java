@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class InvadersGUI extends Canvas implements Stage, KeyListener {
@@ -17,6 +19,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     private Scache spriteCache;
     private ArrayList<Actor> actors;
 
+    private HashMap<String, Player> players;
     private Player player;
 
     private boolean gameEnded = false;
@@ -35,8 +38,20 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         return spriteCache;
     }
 
+    public Player getPlayer(String id){
+        return players.get(id);
+    }
+    public void addPlayer(String id, String name){
+        Player p = new Player(this);
+        p.setX(Stage.WIDTH / 2);
+        p.setY(Stage.HEIGHT - 2 * player.getHeight());
+        p.setVx(5);
+        p.addShields(200);
+        p.setName(name);
+    }
     private void prepareElements() {
         spriteCache = new Scache();
+        players = new HashMap<>();
     }
 
     private void prepareMethods() {
@@ -91,6 +106,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         for (int i = 0; i < actors.size(); i++) {
             Actor m = actors.get(i);
             m.paint(offScreenGraphics);
+        }
+        for(Map.Entry<String, Player> entry : players.entrySet()){
+            entry.getValue().paint(offScreenGraphics);
         }
         player.paint(offScreenGraphics);
         paintStatus(offScreenGraphics);

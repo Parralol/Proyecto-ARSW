@@ -15,13 +15,20 @@ public class Player extends Actor {
     private int score;
     private int shields;
 
+    private String name;
+
     public Player(Stage stage) {
         super(stage);
         setSpriteNames(new String[] { "ship.gif" });
         setFrameSpeed(35);
         clusterBombs = 5;
     }
-
+    public void setName(String name){
+        this.name = name;
+    }
+    public String getName(){
+        return name;
+    }
     public void act() {
         super.act();
         x += vx;
