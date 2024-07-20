@@ -14,7 +14,7 @@ public class Actor {
 
   protected int frameSpeed;
   protected int t;
-  protected boolean markedForRemoval;
+  protected boolean markedForRemoval = false;
 
   public Actor(Stage stage) {
     this.stage = stage;

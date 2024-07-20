@@ -35,6 +35,7 @@ public class Crab extends Monster{
     public void collision(Actor a) {
         if (a instanceof Bullet || a instanceof Bomb){
             remove();
+            spawn();
             stage.getPlayer().addScore(40);
         }
     }

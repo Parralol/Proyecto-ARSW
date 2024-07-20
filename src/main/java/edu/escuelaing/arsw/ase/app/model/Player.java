@@ -115,6 +115,7 @@ public class Player extends Actor {
     }
 
     public void keyReleased(KeyEvent e) {
+        System.out.println(e.getKeyCode());
         switch (e.getKeyCode()) {
             case KeyEvent.VK_DOWN:
                 down = false;

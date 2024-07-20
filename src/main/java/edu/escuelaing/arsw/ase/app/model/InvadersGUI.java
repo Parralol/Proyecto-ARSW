@@ -44,10 +44,11 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     public void addPlayer(String id, String name){
         Player p = new Player(this);
         p.setX(Stage.WIDTH / 2);
-        p.setY(Stage.HEIGHT - 2 * player.getHeight());
+        p.setY(Stage.HEIGHT - 2 * p.getHeight());
         p.setVx(5);
         p.addShields(200);
         p.setName(name);
+        players.put(id, p);
     }
     private void prepareElements() {
         spriteCache = new Scache();
@@ -90,12 +91,18 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         int i = 0;
         while (i < actors.size()) {
             Actor m = actors.get(i);
-            if (m.isMarkedForRemoval()) {
+            if (m != null && m.isMarkedForRemoval()) {
                 actors.remove(i);
-            } else {
+            } else if (m != null){
                 m.act();
                 i++;
+            }else{
+                m = new Monster(this);
+                m.act();
             }
+        }
+        for(Map.Entry<String, Player> entry : players.entrySet()){
+            entry.getValue().act();
         }
         player.act();
     }
@@ -254,7 +261,15 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         // No implementation needed
     }
 
+    public void multiKeyPressed(KeyEvent e, String id){
+        players.get(id).keyPressed(e);
+        System.out.println(players.get(id) + "<--- ID \n" +players.get(id).getX() +" <-X POS \n" +players.get(id).getY()+ "<- Y POS");
+    }
+    public void multiKeyReleased(KeyEvent e, String id){
+        players.get(id).keyReleased(e);
+    }
     public void keyPressed(KeyEvent e) {
+        System.out.println(e.getKeyCode() + "<---258");
         player.keyPressed(e);
     }
 

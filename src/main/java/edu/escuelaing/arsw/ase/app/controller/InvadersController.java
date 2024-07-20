@@ -3,15 +3,15 @@ package edu.escuelaing.arsw.ase.app.controller;
 import edu.escuelaing.arsw.ase.app.model.InvadersGUI;
 import edu.escuelaing.arsw.ase.app.model.Player;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.json.JSONObject;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+
 
 import java.awt.event.KeyEvent;
 import javax.imageio.ImageIO;
@@ -27,33 +27,37 @@ import java.util.logging.Logger;
 @RestController
 public class InvadersController extends TextWebSocketHandler{
 
-    private final String HOME_VIEW_COUNT = "HOME_VIEW_COUNT";
-
-    private final InvadersGUI invadersGUI;
+    private static InvadersGUI invadersGUI;
 
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
-    private final Map<String, Player> players = new ConcurrentHashMap<>(); // Store player data
  
-    Logger log;
+    Logger log = Logger.getLogger(getClass().getName());
+
     public InvadersController() {
-        this.invadersGUI = new InvadersGUI();
+        getInvaders();
         new Thread(() -> {
-            invadersGUI.game();
-            
+            invadersGUI.game();      
         }).start();
     }
 
+    public static InvadersGUI getInvaders(){
+        if(invadersGUI == null){
+            invadersGUI = new InvadersGUI();
+        }
+        return invadersGUI;
+    }
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.put(session.getId(), session);
 
-        invadersGUI.addPlayer(session.getId(), "HOME_VIEW_COUNT");
+        this.invadersGUI.addPlayer(session.getId(), "HOME_VIEW_COUNT");
         // Initialize player data and store it in the map
-        
+        System.out.println(this.invadersGUI.getPlayer(session.getId()));
         session.sendMessage(new TextMessage("Connection established."));
-        
+        session.sendMessage(new TextMessage(getGameImage()));
         // Additional setup, if needed
-
+        // Send player ID to the client
+        session.sendMessage(new TextMessage("Player ID:" + session.getId()));
         log.log(Level.INFO, () -> session.getId() + " INITIALIZED");
     }
 
@@ -64,11 +68,13 @@ public class InvadersController extends TextWebSocketHandler{
 
         System.out.println("Client " + clientId + " sent: " + payload);
 
+        JSONObject obj = new JSONObject(payload);
         // Retrieve player data based on the session ID
-        Player player = players.get(clientId);
-        if (player != null) {
-            updatePlayerData(player, payload);
-        }
+        
+        KeyEventDTO press = new KeyEventDTO();
+        press.setKeyCode(obj.getInt("keyCode"));
+        press.setType(obj.getString("type"));
+        handleKeyEvent(press, clientId);
 
         // Optionally broadcast the updated state to all clients
         broadcastState();
@@ -77,7 +83,7 @@ public class InvadersController extends TextWebSocketHandler{
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session.getId());
-        players.remove(session.getId());
+        //players.remove(session.getId());
         // Cleanup, if needed
     }
 
@@ -99,23 +105,7 @@ public class InvadersController extends TextWebSocketHandler{
         // Retrieve the shared state from your server logic
         return "Current state";
     }
-/** 
-    @GetMapping("/")
-    public String home(Principal principal, HttpSession session) {
-        incrementCount(session, HOME_VIEW_COUNT);
-        return "hello, " + principal.getName();
-    }
 
-    @GetMapping("/count")
-    public String count(HttpSession session) {
-        return "HOME VIEW COUNT: " + session.getAttribute(HOME_VIEW_COUNT);
-    }
-
-    private void incrementCount(HttpSession session, String attr) {
-        var homeViewCount = session.getAttribute(attr) == null ? 0 : (Integer) session.getAttribute(attr);
-        session.setAttribute(attr, homeViewCount += 1);
-    }
-*/
     @GetMapping(value = "/game/image", produces = "image/png")
     public byte[] getGameImage() throws IOException {
         BufferedImage gameImage = invadersGUI.getGameImage();
@@ -124,9 +114,8 @@ public class InvadersController extends TextWebSocketHandler{
         return baos.toByteArray();
     }
 
-    @PostMapping("/game/key")
-    @CrossOrigin
-    public void handleKeyEvent(@RequestBody KeyEventDTO keyEventDTO) {
+
+    public void handleKeyEvent(KeyEventDTO keyEventDTO, String id) {
         KeyEvent keyEvent = new KeyEvent(
                 invadersGUI,
                 keyEventDTO.getType().equals("keydown") ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED,
@@ -135,9 +124,11 @@ public class InvadersController extends TextWebSocketHandler{
                 keyEventDTO.getKeyCode(),
                 KeyEvent.CHAR_UNDEFINED);
         if (keyEventDTO.getType().equals("keydown")) {
-            invadersGUI.keyPressed(keyEvent);
+            invadersGUI.multiKeyPressed(keyEvent, id);
+            //invadersGUI.keyPressed(keyEvent);
         } else {
-            invadersGUI.keyReleased(keyEvent);
+            invadersGUI.multiKeyReleased(keyEvent, id);
+            //invadersGUI.keyReleased(keyEvent);
         }
     }
 

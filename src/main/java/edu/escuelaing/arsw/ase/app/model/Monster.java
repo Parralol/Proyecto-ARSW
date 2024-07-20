@@ -39,6 +39,9 @@ public class Monster extends Actor {
     public void spawn() {
         Random rand = new Random();
         Monster m = new Monster(stage);
+        m.setX((int) (Math.random() * Stage.WIDTH));
+        m.setY((int) (Math.random() * Stage.PLAY_HEIGHT / 2));
+        m.setVx((int) (Math.random() * 20 - 10));
         int rand_int1 = rand.nextInt(5);
         switch(rand_int1){
             case 1:
