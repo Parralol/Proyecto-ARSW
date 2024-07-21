@@ -1,8 +1,6 @@
 package edu.escuelaing.arsw.ase.app.model;
 
 import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -30,14 +28,11 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
 
     private boolean gameEnded = false;
 
-    private BufferedImage offScreenImage;
-    private Graphics2D offScreenGraphics;
+
 
     public InvadersGUI() {
         prepareElements();
         prepareMethods();
-        offScreenImage = new BufferedImage(Stage.WIDTH, Stage.HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        offScreenGraphics = offScreenImage.createGraphics();
     }
 
     public Scache getScache() {
@@ -97,7 +92,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         Iterator<Actor> iterator = actors.iterator();
         while (iterator.hasNext()) {
             Actor m = iterator.next();
-            if (m != null && m.isMarkedForRemoval()) {
+            if (m.isMarkedForRemoval()) {
                 iterator.remove();
             } else if (m != null) {
                 m.act();
@@ -112,46 +107,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         // Update the single player (if this is part of your game logic)
         player.act();
     }
-    public void paintWorld() {
-        offScreenGraphics.setColor(Color.black);
-        offScreenGraphics.fillRect(0, 0, Stage.WIDTH, Stage.HEIGHT);
-        for (Actor m : actors) {
-            if (m != null) {
-                m.paint(offScreenGraphics);
-            }
-        }
-        for (Map.Entry<String, Player> entry : players.entrySet()) {
-            entry.getValue().paint(offScreenGraphics);
-        }
-        player.paint(offScreenGraphics);
-        paintStatus(offScreenGraphics);
-        offScreenGraphics.setColor(Color.white);
-    }
-
-    public BufferedImage getGameImage() {
-        return offScreenImage;
-    }
-
-    public void paintShields(Graphics2D g) {
-        g.setPaint(Color.red);
-        g.fillRect(280, Stage.PLAY_HEIGHT, Player.MAX_SHIELDS, 30);
-        g.setPaint(Color.blue);
-        g.fillRect(280 + Player.MAX_SHIELDS - player.getShields(), Stage.PLAY_HEIGHT, player.getShields(), 30);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.setPaint(Color.green);
-        g.drawString("Shields", 170, Stage.PLAY_HEIGHT + 20);
-    }
-
+   
     public void gameOver() {
         gameEnded = true;
-    }
-
-    public void paintScore(Graphics2D g) {
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.setPaint(Color.green);
-        g.drawString("Score:", 20, Stage.PLAY_HEIGHT + 20);
-        g.setPaint(Color.red);
-        g.drawString(player.getScore() + "", 100, Stage.PLAY_HEIGHT + 20);
     }
 
     public void paintAmmo(Graphics2D g) {
@@ -162,22 +120,6 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         }
     }
 
-    public void paintfps(Graphics2D g) {
-        g.setFont(new Font("Arial", Font.BOLD, 12));
-        g.setColor(Color.white);
-        if (usedTime > 0)
-            g.drawString(String.valueOf(1000 / usedTime) + " fps", Stage.WIDTH - 50, Stage.PLAY_HEIGHT);
-        else
-            g.drawString("--- fps", Stage.WIDTH - 50, Stage.PLAY_HEIGHT);
-    }
-
-    public void paintStatus(Graphics2D g) {
-        paintScore(g);
-        paintShields(g);
-        paintAmmo(g);
-        paintfps(g);
-    }
-
     public void game() {
         usedTime = 1000;
         initWorld();
@@ -185,7 +127,6 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             long startTime = System.currentTimeMillis();
             updateWorld();
             checkCollisions();
-            paintWorld();
             usedTime = System.currentTimeMillis() - startTime;
             try {
                 Thread.sleep(SPEED);
@@ -193,18 +134,10 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 Thread.currentThread().interrupt();
             }
         }
-        paintGameOver();
-    }
-
-    public void paintGameOver() {
-        Graphics2D g = offScreenGraphics;
-        g.setColor(Color.white);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
-        g.drawString("GAME OVER", Stage.WIDTH / 2 - 50, Stage.HEIGHT / 2);
+        //paintGameOver();
     }
 
     public void checkCollisions() {
-        // Check collisions between players and actors
         for (Map.Entry<String, Player> entry : players.entrySet()) {
             Player player = entry.getValue();
             Rectangle playerBounds = player.getBounds();
@@ -219,14 +152,11 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 }
             }
         }
-    
-        // Check collisions between actors
         Iterator<Actor> iterator1 = actors.iterator();
         while (iterator1.hasNext()) {
             Actor a1 = iterator1.next();
             if (a1 == null) continue;
             Rectangle r1 = a1.getBounds();
-    
             Iterator<Actor> iterator2 = actors.iterator();
             while (iterator2.hasNext()) {
                 Actor a2 = iterator2.next();

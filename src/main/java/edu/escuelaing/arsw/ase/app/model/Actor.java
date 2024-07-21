@@ -1,6 +1,5 @@
 package edu.escuelaing.arsw.ase.app.model;
 
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
@@ -34,10 +33,6 @@ public class Actor {
 
   public boolean isMarkedForRemoval() {
     return markedForRemoval;
-  }
-
-  public void paint(Graphics2D g) {
-    g.drawImage(spriteCache.getSprite(spriteNames[currentFrame]), x, y, stage);
   }
 
   public int getX() {

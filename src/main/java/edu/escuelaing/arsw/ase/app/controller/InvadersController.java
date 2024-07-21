@@ -6,7 +6,6 @@ import edu.escuelaing.arsw.ase.app.model.Player;
 
 import org.json.JSONObject;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,9 +14,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 
 import java.awt.event.KeyEvent;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -167,14 +163,6 @@ public class InvadersController extends TextWebSocketHandler{
     private String getSharedState() {
 
         return "Current state";
-    }
-
-    @GetMapping(value = "/game/image", produces = "image/png")
-    public byte[] getGameImage() throws IOException {
-        BufferedImage gameImage = invadersGUI.getGameImage();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(gameImage, "png", baos);
-        return baos.toByteArray();
     }
 
     private void handleNameChange(String clientId, String newName) {
