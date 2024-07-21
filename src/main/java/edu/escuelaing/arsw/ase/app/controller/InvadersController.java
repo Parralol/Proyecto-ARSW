@@ -1,5 +1,6 @@
 package edu.escuelaing.arsw.ase.app.controller;
 
+import edu.escuelaing.arsw.ase.app.model.Actor;
 import edu.escuelaing.arsw.ase.app.model.InvadersGUI;
 import edu.escuelaing.arsw.ase.app.model.Player;
 
@@ -18,6 +19,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -26,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+@SuppressWarnings("static-access")
 @RestController
 public class InvadersController extends TextWebSocketHandler{
 
@@ -48,7 +50,7 @@ public class InvadersController extends TextWebSocketHandler{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 50, TimeUnit.MILLISECONDS);
     }
 
     public static InvadersGUI getInvaders(){
@@ -57,17 +59,15 @@ public class InvadersController extends TextWebSocketHandler{
         }
         return invadersGUI;
     }
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.put(session.getId(), session);
 
-        this.invadersGUI.addPlayer(session.getId(), "HOME_VIEW_COUNT");
+        this.invadersGUI.addPlayer(session.getId(), session.getId());
         // Initialize player data and store it in the map
-        System.out.println(this.invadersGUI.getPlayer(session.getId()));
 
         session.sendMessage(new TextMessage("Connection established."));
-        //session.sendMessage(new TextMessage(getGameImage()));
-        // Additional setup, if needed
         // Send player ID to the client
         session.sendMessage(new TextMessage("Player ID:" + session.getId()));
         log.log(Level.INFO, () -> session.getId() + " INITIALIZED");
@@ -75,21 +75,39 @@ public class InvadersController extends TextWebSocketHandler{
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String clientId = session.getId();
-        String payload = message.getPayload();
-
-        System.out.println("Client " + clientId + " sent: " + payload);
-
-        JSONObject obj = new JSONObject(payload);
-        // Retrieve player data based on the session ID
+            String clientId = session.getId();
+            String payload = message.getPayload();
         
-        KeyEventDTO press = new KeyEventDTO();
-        press.setKeyCode(obj.getInt("keyCode"));
-        press.setType(obj.getString("type"));
-        handleKeyEvent(press, clientId);
-
-        // Optionally broadcast the updated state to all clients
-        broadcastState();
+            System.out.println("Client " + clientId + " sent: " + payload);
+        
+            try {
+                JSONObject obj = new JSONObject(payload);
+                String type = obj.getString("type");
+        
+                switch (type) {
+                    case "keydown":
+                    case "keyup":
+                        // Handle key events
+                        KeyEventDTO press = new KeyEventDTO();
+                        press.setKeyCode(obj.getInt("keyCode"));
+                        press.setType(type);
+                        handleKeyEvent(press, clientId);
+                        break;
+        
+                    case "nameChange":
+                        // Handle name change
+                        String newName = obj.getString("name");
+                        handleNameChange(clientId, newName);
+                        break;
+        
+                    default:
+                        System.err.println("Unknown message type: " + type);
+                        break;
+                }
+            } catch (Exception e) {
+                System.err.println("Error processing message: " + e.getMessage());
+                e.printStackTrace();
+            }
     }
 
     @Override
@@ -99,43 +117,58 @@ public class InvadersController extends TextWebSocketHandler{
         // Cleanup, if needed
     }
 
-    private void updatePlayerData(Player player, String input) {
-        // Implement your logic to update player data based on the input
-        // For example, update the player's position, score, etc.
-        System.out.println("Updating player data for " + player.getName());
-    }
+
 
     private void broadcastState() throws Exception {
-        /** 
         Map<String, Player> players = this.invadersGUI.getPlayers();
         for (WebSocketSession session : sessions.values()) {
             try {
                 String state = getPlayerState(players);
                 session.sendMessage(new TextMessage(state));
+                //state = getActorsState(this.invadersGUI.getActors());
+                //session.sendMessage(new TextMessage(state));
             } catch (IOException e) {
                 log.log(Level.WARNING, "Error broadcasting state to session " + session.getId(), e);
             }
         }
-            */
+    }
+
+    private String getActorsState(ArrayList<Actor> actors){
+        JSONObject json = new JSONObject();
+        int count = 0;
+        for (Actor a : actors) {
+            JSONObject actorJson = new JSONObject();
+            actorJson.put("type", a.getClass().getSimpleName());
+            actorJson.put("x", a.getX());
+            actorJson.put("y", a.getY());
+            json.put( Integer.toString(count++), actorJson);
+        }
+        
+        return json.toString();
     }
     private String getPlayerState(Map<String, Player> players) {
         // Convert player data to JSON string
         JSONObject json = new JSONObject();
+        
         for (Map.Entry<String, Player> entry : players.entrySet()) {
             Player player = entry.getValue();
             JSONObject playerJson = new JSONObject();
             playerJson.put("name", player.getName());
-            playerJson.put("x", player.getX()); // Include x position
-            playerJson.put("y", player.getY()); // Include y position
+            playerJson.put("x", player.getX());
+            playerJson.put("y", player.getY());
+            playerJson.put("life", player.getShields());
+            playerJson.put("id", entry.getKey()); 
             json.put(entry.getKey(), playerJson);
         }
+        
         return json.toString();
     }
+    @SuppressWarnings("unused")
     private String getSharedState() {
-        // Retrieve the shared state from your server logic
+
         return "Current state";
     }
-/** 
+
     @GetMapping(value = "/game/image", produces = "image/png")
     public byte[] getGameImage() throws IOException {
         BufferedImage gameImage = invadersGUI.getGameImage();
@@ -144,7 +177,16 @@ public class InvadersController extends TextWebSocketHandler{
         return baos.toByteArray();
     }
 
-*/
+    private void handleNameChange(String clientId, String newName) {
+        // Update the player name
+        Player player = this.invadersGUI.getPlayer(clientId);
+        if (player != null) {
+            player.setName(newName);
+            System.out.println("Player " + clientId + " changed name to " + newName);
+        } else {
+            System.err.println("Player with ID " + clientId + " not found.");
+        }
+    }
     public void handleKeyEvent(KeyEventDTO keyEventDTO, String id) {
         KeyEvent keyEvent = new KeyEvent(
                 invadersGUI,
@@ -154,7 +196,9 @@ public class InvadersController extends TextWebSocketHandler{
                 keyEventDTO.getKeyCode(),
                 KeyEvent.CHAR_UNDEFINED);
         Map<String, Player> xd = this.invadersGUI.getPlayers();
-        xd.entrySet().forEach(System.out::println);
+        //xd.entrySet().forEach(System.out::println);
+        //System.out.println(getPlayerState(xd));
+        System.out.println(getActorsState(this.invadersGUI.getActors()));
         if (keyEventDTO.getType().equals("keydown")) {
             invadersGUI.multiKeyPressed(keyEvent, id);
             //invadersGUI.keyPressed(keyEvent);

@@ -18,6 +18,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class InvadersGUI extends Canvas implements Stage, KeyListener {
 
     private long usedTime;
@@ -97,7 +98,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         while (iterator.hasNext()) {
             Actor m = iterator.next();
             if (m != null && m.isMarkedForRemoval()) {
-                iterator.remove(); // Safe removal
+                iterator.remove();
             } else if (m != null) {
                 m.act();
             }
@@ -252,21 +253,31 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     }
 
 
+    public void addActor(Actor a) {
+        actors.add(a);
+    }
+
+
     public void setPlayer(Player player) {
         this.player = player;
+    }
+    public Player getPlayer() {
+        return player;
     }
 
     public boolean isGameEnded() {
         return gameEnded;
     }
 
+    public void changePlayerName(String id, String name){
+        getPlayer(id).setName(name);
+    }
+
     public void setGameEnded(boolean gameEnded) {
         this.gameEnded = gameEnded;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
+
 
     public void keyTyped(KeyEvent e) {
         // No implementation needed
@@ -293,8 +304,5 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         player.keyReleased(e);
     }
 
-    public void addActor(Actor a) {
-        actors.add(a);
-    }
 }
 
