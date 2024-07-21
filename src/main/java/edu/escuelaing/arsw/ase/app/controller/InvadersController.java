@@ -20,6 +20,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,12 +35,20 @@ public class InvadersController extends TextWebSocketHandler{
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
  
     Logger log = Logger.getLogger(getClass().getName());
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public InvadersController() {
         getInvaders();
         new Thread(() -> {
             invadersGUI.game();      
         }).start();
+         scheduler.scheduleAtFixedRate(() -> {
+            try {
+                broadcastState();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     public static InvadersGUI getInvaders(){
@@ -53,8 +64,9 @@ public class InvadersController extends TextWebSocketHandler{
         this.invadersGUI.addPlayer(session.getId(), "HOME_VIEW_COUNT");
         // Initialize player data and store it in the map
         System.out.println(this.invadersGUI.getPlayer(session.getId()));
+
         session.sendMessage(new TextMessage("Connection established."));
-        session.sendMessage(new TextMessage(getGameImage()));
+        //session.sendMessage(new TextMessage(getGameImage()));
         // Additional setup, if needed
         // Send player ID to the client
         session.sendMessage(new TextMessage("Player ID:" + session.getId()));
@@ -94,18 +106,36 @@ public class InvadersController extends TextWebSocketHandler{
     }
 
     private void broadcastState() throws Exception {
-        String state = getSharedState(); // Retrieve the current shared state
-
-        for (WebSocketSession s : sessions.values()) {
-            s.sendMessage(new TextMessage("Updated state: " + state));
+        /** 
+        Map<String, Player> players = this.invadersGUI.getPlayers();
+        for (WebSocketSession session : sessions.values()) {
+            try {
+                String state = getPlayerState(players);
+                session.sendMessage(new TextMessage(state));
+            } catch (IOException e) {
+                log.log(Level.WARNING, "Error broadcasting state to session " + session.getId(), e);
+            }
         }
+            */
     }
-
+    private String getPlayerState(Map<String, Player> players) {
+        // Convert player data to JSON string
+        JSONObject json = new JSONObject();
+        for (Map.Entry<String, Player> entry : players.entrySet()) {
+            Player player = entry.getValue();
+            JSONObject playerJson = new JSONObject();
+            playerJson.put("name", player.getName());
+            playerJson.put("x", player.getX()); // Include x position
+            playerJson.put("y", player.getY()); // Include y position
+            json.put(entry.getKey(), playerJson);
+        }
+        return json.toString();
+    }
     private String getSharedState() {
         // Retrieve the shared state from your server logic
         return "Current state";
     }
-
+/** 
     @GetMapping(value = "/game/image", produces = "image/png")
     public byte[] getGameImage() throws IOException {
         BufferedImage gameImage = invadersGUI.getGameImage();
@@ -114,7 +144,7 @@ public class InvadersController extends TextWebSocketHandler{
         return baos.toByteArray();
     }
 
-
+*/
     public void handleKeyEvent(KeyEventDTO keyEventDTO, String id) {
         KeyEvent keyEvent = new KeyEvent(
                 invadersGUI,
@@ -123,6 +153,8 @@ public class InvadersController extends TextWebSocketHandler{
                 0,
                 keyEventDTO.getKeyCode(),
                 KeyEvent.CHAR_UNDEFINED);
+        Map<String, Player> xd = this.invadersGUI.getPlayers();
+        xd.entrySet().forEach(System.out::println);
         if (keyEventDTO.getType().equals("keydown")) {
             invadersGUI.multiKeyPressed(keyEvent, id);
             //invadersGUI.keyPressed(keyEvent);

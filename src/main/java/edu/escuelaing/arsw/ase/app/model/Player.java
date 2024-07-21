@@ -161,8 +161,13 @@ public class Player extends Actor {
                 break;
         }
         updateSpeed();
+        
     }
 
+    @Override
+    public String toString() {
+        return "Player [x=" + x + ", y=" + y + ", score=" + score + ", shields=" + shields + ", name=" + name + "]";
+    }
     public void addScore(int i) {
         score += i;
     }
