@@ -173,14 +173,14 @@ public class Player extends Actor {
             return;
 
         clusterBombs--;
-        stage.addActor(new Bomb(stage, Bomb.UP_LEFT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.UP, x, y));
-        stage.addActor(new Bomb(stage, Bomb.UP_RIGHT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.LEFT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.RIGHT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.DOWN_LEFT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.DOWN, x, y));
-        stage.addActor(new Bomb(stage, Bomb.DOWN_RIGHT, x, y));
+        stage.addActor(new Bomb(stage, Bomb.UP_LEFT, x, y, id));
+        stage.addActor(new Bomb(stage, Bomb.UP, x, y, id));
+        stage.addActor(new Bomb(stage, Bomb.UP_RIGHT, x, y, id));
+        stage.addActor(new Bomb(stage, Bomb.LEFT, x, y, id));
+        stage.addActor(new Bomb(stage, Bomb.RIGHT, x, y, id));
+        stage.addActor(new Bomb(stage, Bomb.DOWN_LEFT, x, y, id));
+        stage.addActor(new Bomb(stage, Bomb.DOWN, x, y, id));
+        stage.addActor(new Bomb(stage, Bomb.DOWN_RIGHT, x, y, id));
     }
 
     @Override

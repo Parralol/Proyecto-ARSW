@@ -46,7 +46,7 @@ public class InvadersController extends TextWebSocketHandler{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 40, TimeUnit.MILLISECONDS);
     }
 
     public static InvadersGUI getInvaders(){

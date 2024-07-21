@@ -15,11 +15,12 @@ public class Bomb extends Actor {
     protected int vx;
     protected int vy;
 
-    public Bomb(Stage stage, int heading, int x, int y) {
+    public Bomb(Stage stage, int heading, int x, int y, String id) {
         super(stage);
         this.x = x;
         this.y = y;
         String sprite = "";
+        this.id = id;
         switch (heading) {
             case UP_LEFT:
                 vx = -BOMB_SPEED;
