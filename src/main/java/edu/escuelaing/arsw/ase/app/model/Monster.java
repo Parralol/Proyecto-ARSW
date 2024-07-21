@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Monster extends Actor {
     protected int vx;
-    protected static final double FIRING_FREQUENCY = 0.05;
+    protected static final double FIRING_FREQUENCY = 0.01;
 
     public Monster(Stage stage) {
         super(stage);
@@ -59,8 +59,8 @@ public class Monster extends Actor {
     public void collision(Actor a) {
         if (a instanceof Bullet || a instanceof Bomb) {
             remove();
-            spawn();
-            stage.getPlayer().addScore(20);
+            //spawn();
+            stage.getPlayers().get(a.getId()).addScore(20);
         }
     }
 }

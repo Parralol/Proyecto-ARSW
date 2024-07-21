@@ -1,6 +1,7 @@
 package edu.escuelaing.arsw.ase.app.model;
 
 import java.awt.image.ImageObserver;
+import java.util.Map;
 
 public interface Stage extends ImageObserver{
       public static final int WIDTH=640;
@@ -12,7 +13,7 @@ public interface Stage extends ImageObserver{
 
       public void addActor(Actor a);
 
-      public Player getPlayer();
+      public Map<String, Player> getPlayers();
 
       public void gameOver();
 }

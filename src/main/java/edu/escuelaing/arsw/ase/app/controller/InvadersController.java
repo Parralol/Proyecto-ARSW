@@ -137,6 +137,7 @@ public class InvadersController extends TextWebSocketHandler{
             actorJson.put("type", a.getClass().getSimpleName());
             actorJson.put("x", a.getX());
             actorJson.put("y", a.getY());
+            actorJson.put("deletion", a.isMarkedForRemoval());
             json.put( Integer.toString(count++), actorJson);
         }
         
@@ -153,6 +154,7 @@ public class InvadersController extends TextWebSocketHandler{
             playerJson.put("x", player.getX());
             playerJson.put("y", player.getY());
             playerJson.put("life", player.getShields());
+            playerJson.put("score", player.getScore());
             playerJson.put("id", entry.getKey()); 
             json.put(entry.getKey(), playerJson);
         }
@@ -186,7 +188,7 @@ public class InvadersController extends TextWebSocketHandler{
         Map<String, Player> xd = this.invadersGUI.getPlayers();
         //xd.entrySet().forEach(System.out::println);
         System.out.println(getPlayerState(xd));
-        System.out.println(getActorsState(this.invadersGUI.getActors()));
+        //System.out.println(getActorsState(this.invadersGUI.getActors()));
         if (keyEventDTO.getType().equals("keydown")) {
             invadersGUI.multiKeyPressed(keyEvent, id);
             //invadersGUI.keyPressed(keyEvent);

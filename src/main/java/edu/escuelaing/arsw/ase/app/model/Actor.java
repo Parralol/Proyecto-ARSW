@@ -2,6 +2,7 @@ package edu.escuelaing.arsw.ase.app.model;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class Actor {
   protected int x, y;
@@ -11,9 +12,10 @@ public class Actor {
   protected Stage stage;
   protected Scache spriteCache;
 
+  protected String id;
   protected int frameSpeed;
   protected int t;
-  protected boolean markedForRemoval = false;
+  protected boolean markedForRemoval;
 
   public Actor(Stage stage) {
     this.stage = stage;
@@ -39,6 +41,13 @@ public class Actor {
     return x;
   }
 
+  public void setId(String id){
+    this.id = id;
+  }
+
+  public String getId(){
+    return id;
+  }
   public void setX(int i) {
     x = i;
   }
@@ -93,4 +102,14 @@ public class Actor {
       currentFrame = (currentFrame + 1) % spriteNames.length;
     }
   }
+
+  @Override
+  public String toString() {
+    return "Actor [x=" + x + ", y=" + y + ", width=" + width + ", height=" + height + ", spriteNames="
+        + Arrays.toString(spriteNames) + ", currentFrame=" + currentFrame + ", stage=" + stage + ", spriteCache="
+        + spriteCache + ", id=" + id + ", frameSpeed=" + frameSpeed + ", t=" + t + ", markedForRemoval="
+        + markedForRemoval + "]";
+  }
+
+  
 }

@@ -26,49 +26,11 @@ public class Player extends Actor {
     public void setName(String name){
         this.name = name;
     }
+
     public String getName(){
         return name;
     }
-    public void act() {
-        super.act();
-        x += vx;
-        y += vy;
-        if (x < 0)
-            x = 0;
-        if (x > Stage.WIDTH - getWidth())
-            x = Stage.WIDTH - getWidth();
-        if (y < 0)
-            y = 0;
-        if (y > Stage.PLAY_HEIGHT - getHeight())
-            y = Stage.PLAY_HEIGHT - getHeight();
-    }
-
-    public void fire() {
-        Bullet b = new Bullet(stage);
-        b.setX(x);
-        b.setY(y - b.getHeight());
-        stage.addActor(b);
-    }
-
-    public int getClusterBombs() {
-        return clusterBombs;
-    }
-
-    public void fireCluster() {
-        if (clusterBombs == 0)
-            return;
-
-        clusterBombs--;
-        stage.addActor(new Bomb(stage, Bomb.UP_LEFT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.UP, x, y));
-        stage.addActor(new Bomb(stage, Bomb.UP_RIGHT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.LEFT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.RIGHT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.DOWN_LEFT, x, y));
-        stage.addActor(new Bomb(stage, Bomb.DOWN, x, y));
-        stage.addActor(new Bomb(stage, Bomb.DOWN_RIGHT, x, y));
-    }
-
+   
     public int getScore() {
         return score;
     }
@@ -101,6 +63,21 @@ public class Player extends Actor {
         vy = i;
     }
 
+    public void addScore(int i) {
+        score += i;
+    }
+
+    public void addShields(int i) {
+        shields += i;
+        if (shields > MAX_SHIELDS)
+            shields = MAX_SHIELDS;
+    }
+
+    public int getClusterBombs() {
+        return clusterBombs;
+    }
+
+
     protected void updateSpeed() {
         vx = 0;
         vy = 0;
@@ -115,7 +92,6 @@ public class Player extends Actor {
     }
 
     public void keyReleased(KeyEvent e) {
-        System.out.println(e.getKeyCode());
         switch (e.getKeyCode()) {
             case KeyEvent.VK_DOWN:
                 down = false;
@@ -134,12 +110,6 @@ public class Player extends Actor {
                 break;
         }
         updateSpeed();
-    }
-
-    public void addShields(int i) {
-        shields += i;
-        if (shields > MAX_SHIELDS)
-            shields = MAX_SHIELDS;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -164,24 +134,57 @@ public class Player extends Actor {
         
     }
 
-    @Override
-    public String toString() {
-        return "Player [x=" + x + ", y=" + y + ", score=" + score + ", shields=" + shields + ", name=" + name + "]";
-    }
-    public void addScore(int i) {
-        score += i;
-    }
-
     public void collision(Actor a) {
         if (a instanceof Laser) {
             a.remove();
             addShields(-10);
-
+            //if (getShields() < 0) stage.gameOver();
+            
         }
         if (a instanceof Monster) {
             addShields(-40);
-            if (getShields() < 0)
-                stage.gameOver();
         }
+        if (getShields() < 0) stage.gameOver();
+    }
+
+    public void act() {
+        super.act();
+        x += vx;
+        y += vy;
+        if (x < 0)
+            x = 0;
+        if (x > Stage.WIDTH - getWidth())
+            x = Stage.WIDTH - getWidth();
+        if (y < 0)
+            y = 0;
+        if (y > Stage.PLAY_HEIGHT - getHeight())
+            y = Stage.PLAY_HEIGHT - getHeight();
+    }
+
+    public void fire() {
+        Bullet b = new Bullet(stage, id);
+        b.setX(x);
+        b.setY(y - b.getHeight());
+        stage.addActor(b);
+    }
+
+    public void fireCluster() {
+        if (clusterBombs == 0)
+            return;
+
+        clusterBombs--;
+        stage.addActor(new Bomb(stage, Bomb.UP_LEFT, x, y));
+        stage.addActor(new Bomb(stage, Bomb.UP, x, y));
+        stage.addActor(new Bomb(stage, Bomb.UP_RIGHT, x, y));
+        stage.addActor(new Bomb(stage, Bomb.LEFT, x, y));
+        stage.addActor(new Bomb(stage, Bomb.RIGHT, x, y));
+        stage.addActor(new Bomb(stage, Bomb.DOWN_LEFT, x, y));
+        stage.addActor(new Bomb(stage, Bomb.DOWN, x, y));
+        stage.addActor(new Bomb(stage, Bomb.DOWN_RIGHT, x, y));
+    }
+
+    @Override
+    public String toString() {
+        return "Player [x=" + x + ", y=" + y + ", score=" + score + ", shields=" + shields + ", name=" + name + "]";
     }
 }
