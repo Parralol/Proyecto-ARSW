@@ -50,7 +50,7 @@ public class InvadersController extends TextWebSocketHandler{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 50, TimeUnit.MILLISECONDS);
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     public static InvadersGUI getInvaders(){
@@ -125,8 +125,8 @@ public class InvadersController extends TextWebSocketHandler{
             try {
                 String state = getPlayerState(players);
                 session.sendMessage(new TextMessage(state));
-                //state = getActorsState(this.invadersGUI.getActors());
-                //session.sendMessage(new TextMessage(state));
+                state = getActorsState(this.invadersGUI.getActors());
+                session.sendMessage(new TextMessage(state));
             } catch (IOException e) {
                 log.log(Level.WARNING, "Error broadcasting state to session " + session.getId(), e);
             }
@@ -197,7 +197,7 @@ public class InvadersController extends TextWebSocketHandler{
                 KeyEvent.CHAR_UNDEFINED);
         Map<String, Player> xd = this.invadersGUI.getPlayers();
         //xd.entrySet().forEach(System.out::println);
-        //System.out.println(getPlayerState(xd));
+        System.out.println(getPlayerState(xd));
         System.out.println(getActorsState(this.invadersGUI.getActors()));
         if (keyEventDTO.getType().equals("keydown")) {
             invadersGUI.multiKeyPressed(keyEvent, id);

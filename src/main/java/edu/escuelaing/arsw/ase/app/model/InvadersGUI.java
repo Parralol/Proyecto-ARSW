@@ -69,10 +69,10 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         actors = new ConcurrentLinkedQueue<>();
         Random rand = new Random();
 
-        for (int i = 0; i < 10; i++) {
-            int randInt1 = rand.nextInt(10);
-            int randInt2 = rand.nextInt(10);
-            if(randInt1 == 5 || randInt2 == 5){
+        for (int i = 0; i < 5; i++) {
+            int randInt1 = rand.nextInt(5);
+            int randInt2 = rand.nextInt(5);
+            if(randInt1 == 1 || randInt2 == 3){
                 Crab m = new Crab(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
@@ -204,22 +204,35 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     }
 
     public void checkCollisions() {
-        Rectangle playerBounds = player.getBounds();
+        // Check collisions between players and actors
+        for (Map.Entry<String, Player> entry : players.entrySet()) {
+            Player player = entry.getValue();
+            Rectangle playerBounds = player.getBounds();
+            
+            for (Actor actor : actors) {
+                if (actor == null) continue;
+                Rectangle actorBounds = actor.getBounds();
+                
+                if (playerBounds.intersects(actorBounds)) {
+                    player.collision(actor);
+                    actor.collision(player);
+                }
+            }
+        }
+    
+        // Check collisions between actors
         Iterator<Actor> iterator1 = actors.iterator();
         while (iterator1.hasNext()) {
             Actor a1 = iterator1.next();
             if (a1 == null) continue;
             Rectangle r1 = a1.getBounds();
-            if (r1.intersects(playerBounds)) {
-                player.collision(a1);
-                a1.collision(player);
-            }
-
+    
             Iterator<Actor> iterator2 = actors.iterator();
             while (iterator2.hasNext()) {
                 Actor a2 = iterator2.next();
-                if (a2 == null || a2 == a1) continue;
+                if (a2 == null || a1 == a2) continue;
                 Rectangle r2 = a2.getBounds();
+    
                 if (r1.intersects(r2)) {
                     a1.collision(a2);
                     a2.collision(a1);
