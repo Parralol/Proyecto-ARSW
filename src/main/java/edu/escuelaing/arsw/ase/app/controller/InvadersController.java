@@ -6,7 +6,6 @@ import edu.escuelaing.arsw.ase.app.model.Player;
 
 import org.json.JSONObject;
 
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -25,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("static-access")
-@RestController
 public class InvadersController extends TextWebSocketHandler{
 
     private static InvadersGUI invadersGUI;
