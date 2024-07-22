@@ -1,17 +1,26 @@
 package edu.escuelaing.arsw.ase.app.model;
 
-import java.util.Random;
-
+/**
+ * Monster class
+ */
 public class Monster extends Actor {
     protected int vx;
     protected static final double FIRING_FREQUENCY = 0.01;
 
+    /**
+     * Constructor for the monster class
+     * 
+     * @param stage the game stage
+     */
     public Monster(Stage stage) {
         super(stage);
         setSpriteNames(new String[] { "bicho.gif", "bicho1.gif" });
         setFrameSpeed(35);
     }
 
+    /**
+     * Monster act
+     */
     public void act() {
         super.act();
         x += vx;
@@ -21,14 +30,27 @@ public class Monster extends Actor {
             fire();
     }
 
+    /**
+     * Gets the velocity of the monster
+     * 
+     * @return
+     */
     public int getVx() {
         return vx;
     }
 
+    /**
+     * Sets the velocity the monster
+     * 
+     * @param i the velocity
+     */
     public void setVx(int i) {
         vx = i;
     }
 
+    /**
+     * Fires a laser
+     */
     public void fire() {
         Laser m = new Laser(stage);
         m.setX(x + getWidth() / 2);
@@ -36,30 +58,14 @@ public class Monster extends Actor {
         stage.addActor(m);
     }
 
-    public void spawn() {
-        Random rand = new Random();
-        Monster m;
-        int rand_int1 = rand.nextInt(2);
-        switch(rand_int1){
-            case 0:
-                m = new Crab(stage);
-                m.setX((int) (Math.random() * Stage.WIDTH));
-                m.setY((int) (Math.random() * Stage.PLAY_HEIGHT / 2));
-                m.setVx((int) (Math.random() * 20 - 10));
-            default:
-                m = new Monster(stage);
-                m.setX((int) (Math.random() * Stage.WIDTH));
-                m.setY((int) (Math.random() * Stage.PLAY_HEIGHT / 2));
-                m.setVx((int) (Math.random() * 20 - 10));
-        }
-        
-        stage.addActor(m);
-    }
-
+    /**
+     * Checks the collision
+     * 
+     * @param a The given actors that collided
+     */
     public void collision(Actor a) {
         if (a instanceof Bullet || a instanceof Bomb) {
             remove();
-            //spawn();
             stage.getPlayers().get(a.getId()).addScore(20);
         }
     }

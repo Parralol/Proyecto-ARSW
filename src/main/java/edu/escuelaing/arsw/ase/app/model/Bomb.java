@@ -1,5 +1,8 @@
 package edu.escuelaing.arsw.ase.app.model;
 
+/**
+ * Bomb class
+ */
 public class Bomb extends Actor {
     public static final int UP_LEFT = 0;
     public static final int UP = 1;
@@ -15,6 +18,15 @@ public class Bomb extends Actor {
     protected int vx;
     protected int vy;
 
+    /**
+     * Bomb constructor
+     * 
+     * @param stage the game stage
+     * @param heading the direction of the bullet
+     * @param x x position
+     * @param y y position
+     * @param id the player Id that show the bomb
+     */
     public Bomb(Stage stage, int heading, int x, int y, String id) {
         super(stage);
         this.x = x;

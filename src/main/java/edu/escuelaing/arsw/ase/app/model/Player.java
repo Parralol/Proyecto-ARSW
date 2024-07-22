@@ -17,48 +17,93 @@ public class Player extends Actor {
 
     private String name;
 
+    /**
+     * Player Constructor
+     * @param stage the game stage
+     */
     public Player(Stage stage) {
         super(stage);
         setSpriteNames(new String[] { "ship.gif" });
         setFrameSpeed(35);
         clusterBombs = 5;
     }
+
+    /**
+     * Sets the player name
+     * @param name String the player name
+     */
     public void setName(String name){
         this.name = name;
     }
 
+    /**
+     * Returns the player name
+     * @return String the player name
+     */
     public String getName(){
         return name;
     }
    
+    /**
+     * Returns the player Score
+     * @return Integer the player score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Sets the game score
+     * @param i sets the player score
+     */
     public void setScore(int i) {
         score = i;
     }
 
+    /**
+     * Returns the player shields
+     * @return Integer shields
+     */
     public int getShields() {
         return shields;
     }
 
+    /**
+     * Sets the player shields
+     * @param i Integer the player Shields
+     */
     public void setShields(int i) {
         shields = i;
     }
 
+    /**
+     * Returns the velocity of the player
+     * @return Integer the velocitiy of the Player
+     */
     public int getVx() {
         return vx;
     }
 
+    /**
+     * Sets the velocity of the player
+     * @param i
+     */
     public void setVx(int i) {
         vx = i;
     }
 
+    /**
+     * Returns the velocity of the Y axis 
+     * @return  Integer velocity
+     */
     public int getVy() {
         return vy;
     }
 
+    /**
+     * Sets the Y axis velocity
+     * @param i Integer the Y velocity
+     */
     public void setVy(int i) {
         vy = i;
     }
