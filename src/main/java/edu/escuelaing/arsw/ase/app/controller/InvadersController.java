@@ -221,6 +221,7 @@ public class InvadersController extends TextWebSocketHandler {
     }
 
     @GetMapping("/scores")
+    @CrossOrigin
     private List<User> getScores(){
         return scores.findAll();
     }
