@@ -76,7 +76,7 @@ public class InvadersController extends TextWebSocketHandler {
         String clientId = session.getId();
         String payload = message.getPayload();
 
-        System.out.println("Client " + clientId + " sent: " + payload);
+        //log.log(Level.INFO,() ->"Client " + clientId + " sent: " + payload);
 
         try {
             JSONObject obj = new JSONObject(payload);
@@ -97,11 +97,11 @@ public class InvadersController extends TextWebSocketHandler {
                     break;
 
                 default:
-                    System.err.println("Unknown message type: " + type);
+                    log.log(Level.WARNING,() ->"Unknown message type: " + type);
                     break;
             }
         } catch (Exception e) {
-            System.err.println("Error processing message: " + e.getMessage());
+            log.log(Level.SEVERE,() ->"Error processing message: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -161,9 +161,9 @@ public class InvadersController extends TextWebSocketHandler {
         Player player = this.invadersGUI.getPlayer(clientId);
         if (player != null) {
             player.setName(newName);
-            System.out.println("Player " + clientId + " changed name to " + newName);
+            log.log(Level.INFO,() ->"Player " + clientId + " changed name to " + newName);
         } else {
-            System.err.println("Player with ID " + clientId + " not found.");
+            log.log(Level.WARNING,() ->"Player with ID " + clientId + " not found.");
         }
     }
 
@@ -175,9 +175,6 @@ public class InvadersController extends TextWebSocketHandler {
                 0,
                 keyEventDTO.getKeyCode(),
                 KeyEvent.CHAR_UNDEFINED);
-        Map<String, Player> players = this.invadersGUI.getPlayers();
-        System.out.println(getPlayerState(players));
-
         if (keyEventDTO.getType().equals("keydown")) {
             invadersGUI.multiKeyPressed(keyEvent, id);
         } else {
@@ -217,7 +214,7 @@ public class InvadersController extends TextWebSocketHandler {
                 playerUpdateSent.put(player.getValue().getId(), true); // Mark update as sent
             }
         }
-        System.out.println("REQUEST SENT");
+       log.log(Level.INFO,()->"REQUEST SENT");
     }
 
     @GetMapping("/scores")
