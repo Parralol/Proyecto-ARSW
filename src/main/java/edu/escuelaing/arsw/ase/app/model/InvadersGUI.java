@@ -14,6 +14,8 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+
+
 /**
  * InvadersGUI class
  */
@@ -23,8 +25,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     private long usedTime;
     private Scache spriteCache;
     private Queue<Actor> actors;
-
     private HashMap<String, Player> players;
+    
+
 
     private boolean gameEnded = false;
 
@@ -35,6 +38,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         prepareElements();
         prepareMethods();
     }
+
 
     /**
      * returns the sprite in a generated cache
@@ -153,7 +157,11 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
 
         // Iterate over players to update their state
         for (Map.Entry<String, Player> entry : players.entrySet()) {
-            entry.getValue().act();
+            if(entry.getValue().isLoose()){
+                
+            }else{
+                entry.getValue().act();
+            }
         }
     }
 
@@ -331,7 +339,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
      * @param id the player id
      */
     public void multiKeyPressed(KeyEvent e, String id) {
-        this.players.get(id).keyPressed(e);
+        if(!this.players.get(id).isLoose()){
+            this.players.get(id).keyPressed(e);
+        }
     }
 
     /**
@@ -341,7 +351,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
      * @param id the player id
      */
     public void multiKeyReleased(KeyEvent e, String id) {
-        players.get(id).keyReleased(e);
+        if(!this.players.get(id).isLoose()){
+            players.get(id).keyReleased(e);
+        }
     }
 
     public void keyPressed(KeyEvent e) {

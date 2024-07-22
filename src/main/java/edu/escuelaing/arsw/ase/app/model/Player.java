@@ -16,9 +16,11 @@ public class Player extends Actor {
     private int shields;
 
     private String name;
+    private boolean loose;
 
     /**
      * Player Constructor
+     * 
      * @param stage the game stage
      */
     public Player(Stage stage) {
@@ -26,26 +28,30 @@ public class Player extends Actor {
         setSpriteNames(new String[] { "ship.gif" });
         setFrameSpeed(35);
         clusterBombs = 5;
+        loose = false;
     }
 
     /**
      * Sets the player name
+     * 
      * @param name String the player name
      */
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
     /**
      * Returns the player name
+     * 
      * @return String the player name
      */
-    public String getName(){
+    public String getName() {
         return name;
     }
-   
+
     /**
      * Returns the player Score
+     * 
      * @return Integer the player score
      */
     public int getScore() {
@@ -54,6 +60,7 @@ public class Player extends Actor {
 
     /**
      * Sets the game score
+     * 
      * @param i sets the player score
      */
     public void setScore(int i) {
@@ -62,6 +69,7 @@ public class Player extends Actor {
 
     /**
      * Returns the player shields
+     * 
      * @return Integer shields
      */
     public int getShields() {
@@ -70,6 +78,7 @@ public class Player extends Actor {
 
     /**
      * Sets the player shields
+     * 
      * @param i Integer the player Shields
      */
     public void setShields(int i) {
@@ -78,6 +87,7 @@ public class Player extends Actor {
 
     /**
      * Returns the velocity of the player
+     * 
      * @return Integer the velocitiy of the Player
      */
     public int getVx() {
@@ -86,6 +96,7 @@ public class Player extends Actor {
 
     /**
      * Sets the velocity of the player
+     * 
      * @param i
      */
     public void setVx(int i) {
@@ -93,8 +104,9 @@ public class Player extends Actor {
     }
 
     /**
-     * Returns the velocity of the Y axis 
-     * @return  Integer velocity
+     * Returns the velocity of the Y axis
+     * 
+     * @return Integer velocity
      */
     public int getVy() {
         return vy;
@@ -102,6 +114,7 @@ public class Player extends Actor {
 
     /**
      * Sets the Y axis velocity
+     * 
      * @param i Integer the Y velocity
      */
     public void setVy(int i) {
@@ -122,6 +135,9 @@ public class Player extends Actor {
         return clusterBombs;
     }
 
+    public boolean isLoose() {
+        return loose;
+    }
 
     protected void updateSpeed() {
         vx = 0;
@@ -176,20 +192,23 @@ public class Player extends Actor {
                 break;
         }
         updateSpeed();
-        
+
     }
 
     public void collision(Actor a) {
-        if (a instanceof Laser) {
-            a.remove();
-            addShields(-10);
-            //if (getShields() < 0) stage.gameOver();
-            
+        if (!loose) {
+            if (a instanceof Laser) {
+                a.remove();
+                addShields(-10);
+                // if (getShields() < 0) stage.gameOver();
+
+            }
+            if (a instanceof Monster) {
+                addShields(-40);
+            }
+            if (getShields() < 0)
+                loose = true;
         }
-        if (a instanceof Monster) {
-            addShields(-40);
-        }
-        if (getShields() < 0) stage.gameOver();
     }
 
     public void act() {

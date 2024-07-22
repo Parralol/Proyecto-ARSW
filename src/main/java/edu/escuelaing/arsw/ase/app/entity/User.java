@@ -9,16 +9,35 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User implements Serializable {
 
     @Id
-    private String name;
+    private String id;
 
-    private String pass;
+    private String score;
+
+    private String name;
 
     public User() {
     }
 
-    public User(String name, String pass) {
+    public User(String id, String score, String name) {
+        this.id = id;
+        this.score = score;
         this.name = name;
-        this.pass = pass;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
     }
 
     public String getName() {
@@ -29,17 +48,9 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getPass() {
-        return pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
     @Override
     public String toString() {
-        return "User [name=" + name + ", pass=" + pass + "]";
+        return "User [id=" + id + ", score=" + score + ", name=" + name + "]";
     }
 
 }
