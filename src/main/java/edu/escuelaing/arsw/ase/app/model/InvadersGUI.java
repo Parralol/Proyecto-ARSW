@@ -28,6 +28,10 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
 
     private boolean gameEnded = false;
 
+    public int numberOfMonsters;
+
+    public int limited;
+
     /**
      * Public InvadersGUI constructor
      */
@@ -76,6 +80,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     private void prepareElements() {
         spriteCache = new Scache();
         players = new HashMap<>();
+        limited = 5;
     }
 
     /**
@@ -91,11 +96,17 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     public void initWorld() {
         actors = new ConcurrentLinkedQueue<>();
         Random rand = new Random();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             int randInt1 = rand.nextInt(5);
             int randInt2 = rand.nextInt(5);
             if (randInt1 == 1 || randInt2 == 3) {
                 Crab m = new Crab(this);
+                m.setX((int) (Math.random() * Stage.WIDTH));
+                m.setY(i * 20);
+                m.setVx((int) (Math.random() * 2));
+                actors.add(m);
+            }else if(randInt1 == 2 || randInt2 == 2){
+                Ship m = new Ship(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
                 m.setVx((int) (Math.random() * 2));
@@ -108,6 +119,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 actors.add(m);
             }
         }
+        numberOfMonsters += 10;
     }
 
     /**
@@ -143,8 +155,21 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             Actor m = iterator.next();
             if (m.isMarkedForRemoval()) {
                 iterator.remove();
-                if (m instanceof Monster) {
+                if (m instanceof Monster && limitMonster()) {
                     generateMonster(m.getY());
+                    if (m instanceof Ship) {
+                        generateMonster(m.getY());
+                        generateMonster(m.getY() + 1);
+                        generateMonster(m.getY() - 1);
+                        numberOfMonsters += 3;
+
+                    }
+                } else if (!limitMonster()) {
+                    limited -= 1;
+                    if (limited == 0) {
+                        limited = 5;
+                        numberOfMonsters = 10;
+                    }
                 }
             } else {
                 m.act();
@@ -159,6 +184,10 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 entry.getValue().act();
             }
         }
+    }
+
+    public boolean limitMonster() {
+        return numberOfMonsters <= 15 ? true : false;
     }
 
     /**
