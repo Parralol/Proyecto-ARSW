@@ -102,13 +102,13 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 Crab m = new Crab(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
-                m.setVx((int) (Math.random() * 20 - 10));
+                m.setVx((int) (Math.random() * 3 - 1));
                 actors.add(m);
             } else {
                 Monster m = new Monster(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
-                m.setVx((int) (Math.random() * 20 - 10));
+                m.setVx((int) (Math.random() * 5 - 1));
                 actors.add(m);
             }
         }
@@ -127,13 +127,13 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             Crab m = new Crab(this);
             m.setX((int) (Math.random() * Stage.WIDTH));
             m.setY(i);
-            m.setVx((int) (Math.random() * 20 - 10));
+            m.setVx((int) (Math.random() * 3 - 1));
             actors.add(m);
         } else {
             Monster m = new Monster(this);
             m.setX((int) (Math.random() * Stage.WIDTH));
             m.setY(i);
-            m.setVx((int) (Math.random() * 20 - 10));
+            m.setVx((int) (Math.random() * 5 - 1));
             actors.add(m);
         }
     }
