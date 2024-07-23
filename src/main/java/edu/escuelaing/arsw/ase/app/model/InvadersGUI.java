@@ -9,12 +9,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-
 
 /**
  * InvadersGUI class
@@ -26,8 +25,6 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     private Scache spriteCache;
     private Queue<Actor> actors;
     private HashMap<String, Player> players;
-    
-
 
     private boolean gameEnded = false;
 
@@ -38,7 +35,6 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         prepareElements();
         prepareMethods();
     }
-
 
     /**
      * returns the sprite in a generated cache
@@ -102,13 +98,13 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 Crab m = new Crab(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
-                m.setVx((int) (Math.random() * 3 - 1));
+                m.setVx((int) (Math.random() * 2));
                 actors.add(m);
             } else {
                 Monster m = new Monster(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
-                m.setVx((int) (Math.random() * 5 - 1));
+                m.setVx((int) (Math.random() * 3));
                 actors.add(m);
             }
         }
@@ -127,13 +123,13 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             Crab m = new Crab(this);
             m.setX((int) (Math.random() * Stage.WIDTH));
             m.setY(i);
-            m.setVx((int) (Math.random() * 3 - 1));
+            m.setVx((int) (Math.random() * 3));
             actors.add(m);
         } else {
             Monster m = new Monster(this);
             m.setX((int) (Math.random() * Stage.WIDTH));
             m.setY(i);
-            m.setVx((int) (Math.random() * 5 - 1));
+            m.setVx((int) (Math.random() * 4));
             actors.add(m);
         }
     }
@@ -157,9 +153,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
 
         // Iterate over players to update their state
         for (Map.Entry<String, Player> entry : players.entrySet()) {
-            if(entry.getValue().isLoose()){
-                
-            }else{
+            if (entry.getValue().isLoose()) {
+
+            } else {
                 entry.getValue().act();
             }
         }
@@ -192,10 +188,8 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         // paintGameOver();
     }
 
-    /**
-     * Checks collision between game actors
-     */
     public void checkCollisions() {
+        // Check collisions between players and actors
         for (Map.Entry<String, Player> entry : players.entrySet()) {
             Player player = entry.getValue();
             Rectangle playerBounds = player.getBounds();
@@ -203,27 +197,32 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             for (Actor actor : actors) {
                 if (actor == null)
                     continue;
-                Rectangle actorBounds = actor.getBounds();
 
+                Rectangle actorBounds = actor.getBounds();
                 if (playerBounds.intersects(actorBounds)) {
                     player.collision(actor);
                     actor.collision(player);
                 }
             }
         }
-        Iterator<Actor> iterator1 = actors.iterator();
-        while (iterator1.hasNext()) {
-            Actor a1 = iterator1.next();
+
+        // Convert the queue to a list to avoid concurrent modification issues
+        List<Actor> actorList = new ArrayList<>(actors);
+
+        // Check collisions between actors
+        for (int i = 0; i < actorList.size(); i++) {
+            Actor a1 = actorList.get(i);
             if (a1 == null)
                 continue;
-            Rectangle r1 = a1.getBounds();
-            Iterator<Actor> iterator2 = actors.iterator();
-            while (iterator2.hasNext()) {
-                Actor a2 = iterator2.next();
-                if (a2 == null || a1 == a2)
-                    continue;
-                Rectangle r2 = a2.getBounds();
 
+            Rectangle r1 = a1.getBounds();
+
+            for (int j = i + 1; j < actorList.size(); j++) {
+                Actor a2 = actorList.get(j);
+                if (a2 == null)
+                    continue;
+
+                Rectangle r2 = a2.getBounds();
                 if (r1.intersects(r2)) {
                     a1.collision(a2);
                     a2.collision(a1);
@@ -339,7 +338,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
      * @param id the player id
      */
     public void multiKeyPressed(KeyEvent e, String id) {
-        if(!this.players.get(id).isLoose()){
+        if (!this.players.get(id).isLoose()) {
             this.players.get(id).keyPressed(e);
         }
     }
@@ -351,7 +350,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
      * @param id the player id
      */
     public void multiKeyReleased(KeyEvent e, String id) {
-        if(!this.players.get(id).isLoose()){
+        if (!this.players.get(id).isLoose()) {
             players.get(id).keyReleased(e);
         }
     }

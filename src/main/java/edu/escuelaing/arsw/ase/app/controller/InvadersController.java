@@ -8,6 +8,8 @@ import edu.escuelaing.arsw.ase.app.service.UserService;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +38,7 @@ public class InvadersController extends TextWebSocketHandler {
     private static InvadersGUI invadersGUI;
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final Map<String, Boolean> playerUpdateSent = new ConcurrentHashMap<>();
+    
     @Autowired
     UserService scores;
 
@@ -220,6 +223,6 @@ public class InvadersController extends TextWebSocketHandler {
     @GetMapping("/scores")
     @CrossOrigin
     private List<User> getScores(){
-        return scores.findAll();
+        return scores.findAllUsersOrderByScoreDesc(Sort.by(Direction.DESC, "score"));
     }
 }
