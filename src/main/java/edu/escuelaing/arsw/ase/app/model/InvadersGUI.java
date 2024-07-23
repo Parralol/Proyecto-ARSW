@@ -105,7 +105,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 m.setY(i * 20);
                 m.setVx((int) (Math.random() * 2));
                 actors.add(m);
-            }else if(randInt1 == 2 || randInt2 == 2){
+            } else if (randInt1 == 2 || randInt2 == 2) {
                 Ship m = new Ship(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
@@ -217,6 +217,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         // paintGameOver();
     }
 
+    /**
+     * Checks collisions between all actors
+     */
     public void checkCollisions() {
         // Check collisions between players and actors
         for (Map.Entry<String, Player> entry : players.entrySet()) {

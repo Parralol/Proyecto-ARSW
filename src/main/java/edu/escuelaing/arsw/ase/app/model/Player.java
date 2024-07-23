@@ -2,6 +2,9 @@ package edu.escuelaing.arsw.ase.app.model;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * Public player class
+ */
 public class Player extends Actor {
 
     protected static final int PLAYER_SPEED = 4;
@@ -121,24 +124,43 @@ public class Player extends Actor {
         vy = i;
     }
 
+    /**
+     * Adds a score to the player
+     * @param i amount of score
+     */
     public void addScore(int i) {
         score += i;
     }
 
+    /**
+     * Adds shields to the player
+     * @param i amount of shield
+     */
     public void addShields(int i) {
         shields += i;
         if (shields > MAX_SHIELDS)
             shields = MAX_SHIELDS;
     }
 
+    /**
+     * Returns the amount of clusterBombs the player currently has
+     * @return Integer amount of clusterbombs
+     */
     public int getClusterBombs() {
         return clusterBombs;
     }
 
+    /**
+     * Checks if the player has lost
+     * @return  true if loose, else false
+     */
     public boolean isLoose() {
         return loose;
     }
 
+    /**
+     * Modifier to adjust velocity
+     */
     protected void updateSpeed() {
         vx = 0;
         vy = 0;
@@ -152,6 +174,10 @@ public class Player extends Actor {
             vx = PLAYER_SPEED;
     }
 
+    /**
+     * Modifies movement given a keyevent if the key is released
+     * @param e the key event
+     */
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_DOWN:
@@ -173,6 +199,10 @@ public class Player extends Actor {
         updateSpeed();
     }
 
+    /**
+     * Modifies movement given a keyevent if the key is pressed
+     * @param e the key event
+     */
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
@@ -195,6 +225,9 @@ public class Player extends Actor {
 
     }
 
+    /**
+     * Acts in a collision
+     */
     public void collision(Actor a) {
         if (!loose) {
             if (a instanceof Laser) {
@@ -211,6 +244,9 @@ public class Player extends Actor {
         }
     }
 
+    /**
+     * Makes a act given the current data
+     */
     public void act() {
         super.act();
         x += vx;
@@ -225,6 +261,9 @@ public class Player extends Actor {
             y = Stage.PLAY_HEIGHT - getHeight();
     }
 
+    /**
+     * Fire action, generates a bullet actor given the current invaders context
+     */
     public void fire() {
         Bullet b = new Bullet(stage, id);
         b.setX(x);
@@ -232,6 +271,9 @@ public class Player extends Actor {
         stage.addActor(b);
     }
 
+    /**
+     * fires cluster bombs
+     */
     public void fireCluster() {
         if (clusterBombs == 0)
             return;

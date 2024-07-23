@@ -2,13 +2,16 @@ package edu.escuelaing.arsw.ase.app.model;
 
 import java.util.Random;
 
+/**
+ * Ship Class
+ */
 public class Ship extends Monster {
 
     public int consY;
     public int shields;
 
     /**
-     * Contructor for the Crab class
+     * Contructor for the Ship class
      * 
      * @param stage the game stage
      */
@@ -23,7 +26,7 @@ public class Ship extends Monster {
     }
 
     /**
-     * The act Crab will execute
+     * The act Ship will execute
      */
     @Override
     public void act() {
@@ -38,12 +41,11 @@ public class Ship extends Monster {
     public void collision(Actor a) {
         if (a instanceof Bullet || a instanceof Bomb) {
             shields -= 10;
-            if(shields <= 0 ){
+            if (shields <= 0) {
                 stage.getPlayers().get(a.getId()).addScore(50);
                 remove();
-            } 
-            
+            }
+
         }
     }
 }
-

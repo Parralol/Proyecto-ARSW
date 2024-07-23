@@ -5,15 +5,28 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import javax.imageio.ImageIO;
 
+/**
+ * Public logic class Scache for image processing and handling
+ */
+@SuppressWarnings({ "rawtypes", "unchecked" })
+
 public class Scache {
-    @SuppressWarnings("rawtypes")
+
     private HashMap sprites;
 
-    @SuppressWarnings("rawtypes")
+    /**
+     * public Scache constructor
+     */
     public Scache() {
-            sprites = new HashMap();
-          }
+        sprites = new HashMap();
+    }
 
+    /**
+     * Public method to load the image
+     * 
+     * @param nombre image name
+     * @return BufferedImage
+     */
     private BufferedImage loadImage(String nombre) {
         try {
             return ImageIO.read(new FileInputStream(nombre));
@@ -24,7 +37,12 @@ public class Scache {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Public method to get a sprite
+     * 
+     * @param nombre returns a sprite given the sprite name
+     * @return BufferedImage
+     */
     public BufferedImage getSprite(String nombre) {
         BufferedImage img = (BufferedImage) sprites.get(nombre);
         if (img == null) {
@@ -34,7 +52,11 @@ public class Scache {
         return img;
     }
 
-    @SuppressWarnings("rawtypes")
+    /**
+     * Public method to obtain all sprites
+     * 
+     * @return HashMap containing the sprites
+     */
     public HashMap getSprites() {
         return sprites;
     }
