@@ -216,7 +216,7 @@ public class InvadersController extends TextWebSocketHandler {
         for (Map.Entry<String, Player> player : players.entrySet()) {
             Boolean xd = !playerUpdateSent.getOrDefault(player.getValue().getId(), false);
             if (player != null && player.getValue().isLoose() && Boolean.TRUE.equals(xd)) {
-                scores.save(new User(player.getValue().getId(), Integer.toString(player.getValue().getScore()) , player.getValue().getName()));
+                scores.save(new User(player.getValue().getId(), player.getValue().getScore() , player.getValue().getName()));
                 playerUpdateSent.put(player.getValue().getId(), true);
             }
         }

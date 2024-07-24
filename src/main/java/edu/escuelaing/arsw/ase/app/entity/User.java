@@ -11,14 +11,14 @@ public class User implements Serializable {
     @Id
     private String id;
 
-    private String score;
+    private int score;
 
     private String name;
 
     public User() {
     }
 
-    public User(String id, String score, String name) {
+    public User(String id, int score, String name) {
         this.id = id;
         this.score = score;
         this.name = name;
@@ -32,11 +32,11 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void setScore(String score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
