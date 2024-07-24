@@ -24,7 +24,7 @@ class InvadersGUITest {
     @Test
     void testAddPlayer() {
         String playerId = "player1";
-        String playerName = "John Doe";
+        String playerName = "Parralol";
         game.addPlayer(playerId, playerName);
 
         Player player = game.getPlayer(playerId);
@@ -36,10 +36,10 @@ class InvadersGUITest {
     @Test
     void testChangePlayerName() {
         String playerId = "player1";
-        String playerName = "John Doe";
+        String playerName = "Parralol";
         game.addPlayer(playerId, playerName);
 
-        String newPlayerName = "Jane Doe";
+        String newPlayerName = "Parraol";
         game.changePlayerName(playerId, newPlayerName);
 
         Player player = game.getPlayer(playerId);
@@ -74,7 +74,7 @@ class InvadersGUITest {
     @Test
     void testGetPlayers() {
         String playerId = "player1";
-        String playerName = "John Doe";
+        String playerName = "Parralol";
         game.addPlayer(playerId, playerName);
 
         Map<String, Player> players = game.getPlayers();

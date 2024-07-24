@@ -105,7 +105,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 m.setY(i * 20);
                 m.setVx((int) (Math.random() * 2));
                 actors.add(m);
-            } else if (randInt1 == 2 || randInt2 == 2) {
+            } else if (randInt1 == 2 && randInt2 == 2) {
                 Ship m = new Ship(this);
                 m.setX((int) (Math.random() * Stage.WIDTH));
                 m.setY(i * 20);
@@ -137,7 +137,13 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             m.setY(i);
             m.setVx((int) (Math.random() * 3));
             actors.add(m);
-        } else {
+        } else if (randInt1 == 2 || randInt2 == 2) {
+            Ship m = new Ship(this);
+            m.setX((int) (Math.random() * Stage.WIDTH));
+            m.setY(i * 20);
+            m.setVx((int) (Math.random() * 2));
+            actors.add(m);
+        }else {
             Monster m = new Monster(this);
             m.setX((int) (Math.random() * Stage.WIDTH));
             m.setY(i);
@@ -157,12 +163,12 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 iterator.remove();
                 if (m instanceof Monster && limitMonster()) {
                     generateMonster(m.getY());
-                    if (m instanceof Ship) {
+                    if (m instanceof Ship && (numberOfMonsters + 3) <= 15 ) {
                         generateMonster(m.getY());
                         generateMonster(m.getY() + 1);
                         generateMonster(m.getY() - 1);
                         numberOfMonsters += 3;
-
+                        System.out.println(limitMonster() + "--" + numberOfMonsters);
                     }
                 } else if (!limitMonster()) {
                     limited -= 1;
