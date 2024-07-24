@@ -1,10 +1,11 @@
 # Proyecto-ARSW
 
-This programm allow multiple users to draw in a board using realtime securely
+This program allows for multiple players to play a mini version of Space Invaders!
 
 ## Architecture 
 
-![Lab09](https://github.com/user-attachments/assets/c4c995d4-2ad3-4378-b2fa-fe2c408ca078)
+![Proyecto ARSW](https://github.com/user-attachments/assets/707cb235-e871-4b3d-adce-33666b51c111)
+
 
 First of all, the given diagram shows three services that the user can use: login, create and canvas, but to enter to the canvas service first you need to login or create account, to create accout first you enter to the url with the path /create submited, then the data will be sent to the interactiveblackboard application, which will resend the data to UserController which will handle all the data the db has stored about all the accounts, then you'll be prompted to login and user the credential to be verified by DrawingServiceController and uses the db to try and find the users user.
 
@@ -43,8 +44,45 @@ First clone this proyect into your own system, then
 mvn clean package
 ```
 
-### Acceptance test
+## Running the tests
 
+To run the automated tests you'll have to type in the console 
+```
+mvn test
+```
+this program works with the following tests:
+
+![image](https://github.com/Parralol/Lab01ARSW/assets/110953563/1b5c19d6-0f1d-43bf-b1f4-4fdb767c5844)
+
+And a acceptance test
+
+### Break down into end to end tests
+
+* **testSelectFiles_phy**
+
+    This test allow us to assure that the selection of files in the phy case works, this will asure that the program reads the files accordingly. 
+
+* **testSelectFiles_loc**
+  
+    This test allow us to assure that the selection of files in the loc case works, this will asure that the program reads the files accordingly. 
+
+* **testSelectFiles_throwsExceptionForMultipleFiles**
+  
+     This test allow us to assure that the selection of files in both cases works, this will asure that the program reads the files accordingly and only validates one file. 
+
+* **testSelectFiles_throwsExceptionForNoFiles**
+
+  This test allow us to assure that the selection of files in both cases works, this will asure that the program reads the files accordingly and will validate if no file exists.
+
+* **testSelectFiles_throwsExceptionForInvalidArgument**
+
+  Validates if loc or phy is entered, if not it should raise an error.
+
+* **testFileHasFourLOC**
+
+  This test validates if the program calculates correctly the amount of lines of code.
+  
+### Acceptance test
 
 
 https://github.com/user-attachments/assets/15ba9505-4d21-41a0-9aca-b5edbc2b59f4
