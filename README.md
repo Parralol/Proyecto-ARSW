@@ -4,7 +4,8 @@ This program allows for multiple players to play a mini version of Space Invader
 
 ## Architecture 
 
-![Proyecto ARSW](https://github.com/user-attachments/assets/1cec28dd-8638-4384-9fe5-2c5b8b1ceb07)
+![Proyecto ARSW](https://github.com/user-attachments/assets/707cb235-e871-4b3d-adce-33666b51c111)
+
 
 First of all, the given diagram shows three services that the user can use: login, create and canvas, but to enter to the canvas service first you need to login or create account, to create accout first you enter to the url with the path /create submited, then the data will be sent to the interactiveblackboard application, which will resend the data to UserController which will handle all the data the db has stored about all the accounts, then you'll be prompted to login and user the credential to be verified by DrawingServiceController and uses the db to try and find the users user.
 
