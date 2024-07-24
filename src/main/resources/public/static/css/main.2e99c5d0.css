@@ -1,0 +1,135 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace
+}
+
+body {
+    background-color: #282c34;
+    color: #fff;
+    font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    justify-content: center;
+    margin: 0
+}
+
+.game-container,
+body {
+    align-items: center;
+    display: flex
+}
+
+.game-container {
+    flex-direction: column;
+    position: relative;
+    text-align: center
+}
+
+.game-title {
+    color: #61dafb;
+    font-size: 3rem;
+    margin-bottom: 20px
+}
+
+.game-wrapper {
+    display: inline-block;
+    position: relative
+}
+
+.game-canvas {
+    background-color: #000;
+    border: 1px solid #444;
+    box-shadow: 0 4px 8px #00000080;
+    margin-bottom: 20px
+}
+
+.name-input-container {
+    margin-top: 20px
+}
+
+.name-label {
+    font-size: 1rem;
+    margin-right: 10px
+}
+
+.name-input {
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    padding: 5px 10px;
+    transition: box-shadow .3s ease-in-out;
+    width: 200px
+}
+
+.name-input:focus {
+    box-shadow: 0 0 5px #61dafb;
+    outline: none
+}
+
+.player-info-container {
+    height: 100%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%
+}
+
+.player-info {
+    background-color: #00000080;
+    border-radius: 4px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    padding: 2px 5px;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 10
+}
+
+.player-name {
+    pointer-events: none
+}
+
+.scores-table {
+    box-shadow: 0 0 10px #0000001a;
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%
+}
+
+.scores-table h2 {
+    margin: 10px 0;
+    text-align: center
+}
+
+.scores-table table {
+    border-collapse: collapse;
+    width: 100%
+}
+
+.scores-table td,
+.scores-table th {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: left
+}
+
+.scores-table th {
+    background-color: #444
+}
+
+.scores-table tbody tr:nth-child(2n) {
+    background-color: #333
+}
+
+.scores-table tbody tr:hover {
+    background-color: #444
+}
+
+/*# sourceMappingURL=main.2e99c5d0.css.map*/
