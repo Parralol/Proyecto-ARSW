@@ -90,7 +90,7 @@ public class Player extends Actor{
      * @param i Integer the player Shields
      */
     public void setShields(int i) {
-        shields = i;
+        addShields(i);
     }
 
     /**
@@ -145,6 +145,7 @@ public class Player extends Actor{
         shields += i;
         if (shields > MAX_SHIELDS)
             shields = MAX_SHIELDS;
+        if (getShields() < 0) loose = true;
     }
 
     /**
@@ -247,8 +248,6 @@ public class Player extends Actor{
             if (a instanceof Monster) {
                 addShields(-40);
             }
-            if (getShields() < 0)
-                loose = true;
         }
     }
 
