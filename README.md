@@ -7,11 +7,9 @@ This program allows for multiple players to play a mini version of Space Invader
 ![Proyecto ARSW](https://github.com/user-attachments/assets/707cb235-e871-4b3d-adce-33666b51c111)
 
 
-First of all, the given diagram shows three services that the user can use: login, create and canvas, but to enter to the canvas service first you need to login or create account, to create accout first you enter to the url with the path /create submited, then the data will be sent to the interactiveblackboard application, which will resend the data to UserController which will handle all the data the db has stored about all the accounts, then you'll be prompted to login and user the credential to be verified by DrawingServiceController and uses the db to try and find the users user.
+First of all, the given diagram shows a set of users that connect via browser to a HTTPS connection in the 8080 port, this delivers a react-js based client in which the comunication to the server will be stablished, this client consists of a App react-dom which integrates the InvadersGame class, this consists of a set of entities, players, id's, playerNames and scores, this InvadersGame is in charge of loading and using the other programm classes, this being the useLoadImages class (this class uses a resources folder), useCanvas class (class use for drawing the corresponding server output) and a useWebSocket, which uses a reconnectingWebSocket to ensure continuous communication to the server, once the connection via websocket is stablished the server will start to continuosly send each object coordinate for the client to draw, each Json object that is being send consists of two bodies, one being the actors bodies and another being the players bodies, each has a different structure and contains different data, such as it's class type, health, state, e.t.c, this informations gets recieved by the useWebSocket for the InvadersGame to use, InvadersGame processes the Json data and then uses useLoadImages to load all images representing the delivered data, for the canvas to deliver the graphical output and draw everything that is contained in the data structures, this react client when given certain input will make a Https Rest request to the server for it to recieve all players scores.
 
-As seen by this diagram we can see the run time in which each user connects via browser to the host using http and the 8080 port, and this browser will be supported by a React mounted client that works with ReactDOM that creates a Root that renders the editor, this editor supports the canvas that each user will be using, this canvas contains a svrStatus object that contains the connection status with the server, a comunicationWS object that works with the React.Ref library and the myp5 object that mantains the canvas.
-
-the BBCanvas uses the WSBBChannel which purpose is to mantain connections and send data to the server, this uses the BBServiceURL to initialize the URL given X host, then communicates to the server via WebSockets and references either /bbService or /status paths, the interactiveblackboardApplication validates each path given and returns the corresponding result with each point given and broadcast all points that are getting sent to the server.
+Now, talking about the server this is composed by a static js resource which in simple terms is still the react enviroment, only that is now taking resources from spring to send the configuration to each client, then all data is recieved by InvadersApplication, this is our main class and it has the capabilites to delegate the requests to InvadersController which handles either Https and Wss requests, also manages the InvadersGUI singleton object, the unique and only instance of the game, this instance has a Actor and Player java classes, it's important to denote them because their are the most important data object in this project, now Scache uses the resources folder of the directory, not the Spring instance, if InvadersController recieves a Restful request then it will call UserService to comunicate with the Mongodb cluster, using the user java class as a template it will recieve or create a document with the provided user data, sending the data once again to the Controller, back to the InvadersApplication, and finally to the client for it to display. 
 
 ## Getting Started
 
@@ -109,7 +107,12 @@ And a acceptance test
 ### Acceptance test
 
 
-https://github.com/user-attachments/assets/15ba9505-4d21-41a0-9aca-b5edbc2b59f4
+https://github.com/user-attachments/assets/3bc5433a-5113-4ca9-8fad-12b49aabe07e
+
+
+
+https://github.com/user-attachments/assets/0b190293-a140-415c-813d-df18021df423
+
 
 
 ## Generating javadoc
