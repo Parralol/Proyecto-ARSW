@@ -16,6 +16,7 @@ public class Bullet extends Actor {
         setFrameSpeed(35);
     }
 
+    @Override
     public void act() {
         super.act();
         y -= BULLET_SPEED;

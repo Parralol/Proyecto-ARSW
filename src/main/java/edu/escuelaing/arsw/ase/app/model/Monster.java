@@ -21,6 +21,7 @@ public class Monster extends Actor {
     /**
      * Monster act
      */
+    @Override
     public void act() {
         super.act();
         x += vx;
@@ -63,6 +64,7 @@ public class Monster extends Actor {
      * 
      * @param a The given actors that collided
      */
+    @Override
     public void collision(Actor a) {
         if (a instanceof Bullet || a instanceof Bomb) {
             remove();

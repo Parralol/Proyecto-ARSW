@@ -20,7 +20,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,7 +116,7 @@ public class InvadersController extends TextWebSocketHandler {
         sessions.remove(session.getId());
     }
 
-    private void broadcastState() throws Exception {
+    private void broadcastState(){
         Map<String, Player> players = this.invadersGUI.getPlayers();
         for (WebSocketSession session : sessions.values()) {
             try {
@@ -131,7 +130,7 @@ public class InvadersController extends TextWebSocketHandler {
         }
     }
 
-    private String getActorsState(ArrayList<Actor> actors) {
+    private String getActorsState(List<Actor> actors) {
         JSONObject json = new JSONObject();
         int count = 0;
         for (Actor a : actors) {

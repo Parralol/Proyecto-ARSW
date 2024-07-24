@@ -6,7 +6,7 @@ import java.util.Random;
  * Public Monster Crab class
  */
 public class Crab extends Monster {
-    public int consY;
+    private int consY;
 
     /**
      * Contructor for the Crab class
@@ -18,8 +18,8 @@ public class Crab extends Monster {
         setSpriteNames(new String[] { "Crab.gif", "Crab1.gif" });
         Random rand = new Random();
         setFrameSpeed(35);
-        int rand_int1 = rand.nextInt(150);
-        consY = rand_int1;
+        int randint1 = rand.nextInt(150);
+        consY = randint1;
     }
 
     /**

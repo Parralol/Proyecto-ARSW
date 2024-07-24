@@ -2,7 +2,12 @@ package edu.escuelaing.arsw.ase.app.model;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
 
 /**
@@ -10,10 +15,10 @@ import javax.imageio.ImageIO;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 
-public class Scache {
+public class Scache implements Serializable{
 
     private HashMap sprites;
-
+    Logger log = Logger.getLogger(getClass().getName());
     /**
      * public Scache constructor
      */
@@ -31,7 +36,7 @@ public class Scache {
         try {
             return ImageIO.read(new FileInputStream(nombre));
         } catch (Exception e) {
-            System.out.println("El error fue : " + e.getClass().getName() + " " + e.getMessage());
+            log.log(Level.WARNING, () ->"El error fue : " + e.getClass().getName() + " " + e.getMessage());
             System.exit(0);
             return null;
         }
@@ -57,7 +62,7 @@ public class Scache {
      * 
      * @return HashMap containing the sprites
      */
-    public HashMap getSprites() {
+    public Map getSprites() {
         return sprites;
     }
 }

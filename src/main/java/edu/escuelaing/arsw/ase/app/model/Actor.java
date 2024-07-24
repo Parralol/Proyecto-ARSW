@@ -2,14 +2,17 @@ package edu.escuelaing.arsw.ase.app.model;
 
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Actor class
  */
-public class Actor {
-  protected int x, y;
-  protected int width, height;
+public class Actor implements Serializable{
+  protected int x;
+  protected int y;
+  protected int width;
+  protected int height;
   protected String[] spriteNames;
   protected int currentFrame;
   protected Stage stage;
@@ -49,6 +52,7 @@ public class Actor {
    * @param a actor that collided
    */
   public void collision(Actor a) {
+    //NO COMPLETED DUE TO OVERRIDE NECESSITY
   }
 
   /**

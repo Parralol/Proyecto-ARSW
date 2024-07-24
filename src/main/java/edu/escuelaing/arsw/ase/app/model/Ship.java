@@ -7,8 +7,8 @@ import java.util.Random;
  */
 public class Ship extends Monster {
 
-    public int consY;
-    public int shields;
+    private int consY;
+    private int shields;
 
     /**
      * Contructor for the Ship class
@@ -20,8 +20,8 @@ public class Ship extends Monster {
         setSpriteNames(new String[] { "Aship.gif", "Aship.gif" });
         Random rand = new Random();
         setFrameSpeed(35);
-        int rand_int1 = rand.nextInt(150);
-        consY = rand_int1;
+        int randint1 = rand.nextInt(150);
+        consY = randint1;
         shields = 30;
     }
 

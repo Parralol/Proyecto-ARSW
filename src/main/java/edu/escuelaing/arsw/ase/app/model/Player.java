@@ -5,14 +5,19 @@ import java.awt.event.KeyEvent;
 /**
  * Public player class
  */
-public class Player extends Actor {
+public class Player extends Actor{
 
     protected static final int PLAYER_SPEED = 4;
     public static final int MAX_SHIELDS = 200;
 
     protected int vx;
     protected int vy;
-    private boolean up, down, left, right;
+
+    private boolean up;
+    private boolean down; 
+    private boolean left; 
+    private boolean right;
+
     private int clusterBombs;
 
     private int score;
@@ -26,7 +31,7 @@ public class Player extends Actor {
      * 
      * @param stage the game stage
      */
-    public Player(Stage stage) {
+    public Player(Stage stage){
         super(stage);
         setSpriteNames(new String[] { "ship.gif" });
         setFrameSpeed(35);
@@ -195,6 +200,8 @@ public class Player extends Actor {
             case KeyEvent.VK_SPACE:
                 fire();
                 break;
+            default:
+                break;
         }
         updateSpeed();
     }
@@ -220,6 +227,8 @@ public class Player extends Actor {
             case KeyEvent.VK_B:
                 fireCluster();
                 break;
+            default:
+                break;
         }
         updateSpeed();
 
@@ -228,13 +237,12 @@ public class Player extends Actor {
     /**
      * Acts in a collision
      */
+    @Override
     public void collision(Actor a) {
         if (!loose) {
             if (a instanceof Laser) {
                 a.remove();
                 addShields(-10);
-                // if (getShields() < 0) stage.gameOver();
-
             }
             if (a instanceof Monster) {
                 addShields(-40);
@@ -247,6 +255,7 @@ public class Player extends Actor {
     /**
      * Makes a act given the current data
      */
+    @Override
     public void act() {
         super.act();
         x += vx;

@@ -1,13 +1,10 @@
 package edu.escuelaing.arsw.ase.app;
 
 import edu.escuelaing.arsw.ase.app.model.InvadersGUI;
-import edu.escuelaing.arsw.ase.app.model.Actor;
 import edu.escuelaing.arsw.ase.app.model.Player;
-import edu.escuelaing.arsw.ase.app.model.Monster;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.awt.event.KeyEvent;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;

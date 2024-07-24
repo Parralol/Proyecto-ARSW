@@ -1,5 +1,6 @@
 package edu.escuelaing.arsw.ase.app.model;
 
+
 /**
  * Bomb class
  */
@@ -74,11 +75,14 @@ public class Bomb extends Actor {
                 vy = BOMB_SPEED;
                 sprite = "bombDR.gif";
                 break;
+            default:
+                break;
         }
         setSpriteNames(new String[] { sprite });
         setFrameSpeed(35);
     }
 
+    @Override
     public void act() {
         super.act();
         y += vy;

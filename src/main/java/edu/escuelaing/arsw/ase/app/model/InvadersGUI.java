@@ -28,9 +28,9 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
 
     private boolean gameEnded = false;
 
-    public int numberOfMonsters;
+    private int numberOfMonsters;
 
-    public int limited;
+    private int limited;
 
     /**
      * Public InvadersGUI constructor
@@ -42,6 +42,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
 
     /**
      * returns the sprite in a generated cache
+     * @return sprite cache
      */
     public Scache getScache() {
         return spriteCache;
@@ -101,21 +102,21 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             int randInt2 = rand.nextInt(5);
             if (randInt1 == 1 || randInt2 == 3) {
                 Crab m = new Crab(this);
-                m.setX((int) (Math.random() * Stage.WIDTH));
+                m.setX((rand.nextInt(Stage.WIDTH)));
                 m.setY(i * 20);
-                m.setVx((int) (Math.random() * 2));
+                m.setVx(rand.nextInt(2));
                 actors.add(m);
             } else if (randInt1 == 2 && randInt2 == 2) {
                 Ship m = new Ship(this);
-                m.setX((int) (Math.random() * Stage.WIDTH));
+                m.setX(rand.nextInt(Stage.WIDTH));
                 m.setY(i * 20);
-                m.setVx((int) (Math.random() * 2));
+                m.setVx(rand.nextInt(2));
                 actors.add(m);
             } else {
                 Monster m = new Monster(this);
-                m.setX((int) (Math.random() * Stage.WIDTH));
+                m.setX(rand.nextInt(Stage.WIDTH));
                 m.setY(i * 20);
-                m.setVx((int) (Math.random() * 3));
+                m.setVx(rand.nextInt(3));
                 actors.add(m);
             }
         }
@@ -133,21 +134,21 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
         int randInt2 = rand.nextInt(5);
         if (randInt1 == 1 || randInt2 == 3) {
             Crab m = new Crab(this);
-            m.setX((int) (Math.random() * Stage.WIDTH));
+            m.setX(rand.nextInt(Stage.WIDTH));
             m.setY(i);
-            m.setVx((int) (Math.random() * 3));
+            m.setVx(rand.nextInt(3));
             actors.add(m);
         } else if (randInt1 == 2 || randInt2 == 2) {
             Ship m = new Ship(this);
-            m.setX((int) (Math.random() * Stage.WIDTH));
+            m.setX(rand.nextInt(Stage.WIDTH));
             m.setY(i * 20);
-            m.setVx((int) (Math.random() * 2));
+            m.setVx(rand.nextInt(2));
             actors.add(m);
         }else {
             Monster m = new Monster(this);
-            m.setX((int) (Math.random() * Stage.WIDTH));
+            m.setX(rand.nextInt(Stage.WIDTH));
             m.setY(i);
-            m.setVx((int) (Math.random() * 4));
+            m.setVx(rand.nextInt(4));
             actors.add(m);
         }
     }
@@ -156,44 +157,13 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
      * Updates the InvadersGUI
      */
     public void updateWorld() {
-        Iterator<Actor> iterator = actors.iterator();
-        while (iterator.hasNext()) {
-            Actor m = iterator.next();
-            if (m.isMarkedForRemoval()) {
-                iterator.remove();
-                if (m instanceof Monster && limitMonster()) {
-                    generateMonster(m.getY());
-                    if (m instanceof Ship && (numberOfMonsters + 3) <= 15 ) {
-                        generateMonster(m.getY());
-                        generateMonster(m.getY() + 1);
-                        generateMonster(m.getY() - 1);
-                        numberOfMonsters += 3;
-                        System.out.println(limitMonster() + "--" + numberOfMonsters);
-                    }
-                } else if (!limitMonster()) {
-                    limited -= 1;
-                    if (limited == 0) {
-                        limited = 5;
-                        numberOfMonsters = 10;
-                    }
-                }
-            } else {
-                m.act();
-            }
-        }
-
-        // Iterate over players to update their state
-        for (Map.Entry<String, Player> entry : players.entrySet()) {
-            if (entry.getValue().isLoose()) {
-
-            } else {
-                entry.getValue().act();
-            }
-        }
+        handleActorUpdates();
+        handlePlayerUpdates();
     }
+    
 
     public boolean limitMonster() {
-        return numberOfMonsters <= 15 ? true : false;
+        return numberOfMonsters <= 15;
     }
 
     /**
@@ -220,7 +190,6 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
                 Thread.currentThread().interrupt();
             }
         }
-        // paintGameOver();
     }
 
     /**
@@ -244,10 +213,8 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
             }
         }
 
-        // Convert the queue to a list to avoid concurrent modification issues
         List<Actor> actorList = new ArrayList<>(actors);
 
-        // Check collisions between actors
         for (int i = 0; i < actorList.size(); i++) {
             Actor a1 = actorList.get(i);
             if (a1 == null)
@@ -288,15 +255,6 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     }
 
     /**
-     * Returns the spriteCache
-     * 
-     * @return sprite cache
-     */
-    public Scache getSpriteCache() {
-        return spriteCache;
-    }
-
-    /**
      * Sets the spritecache
      * 
      * @param spriteCache the sprite cache you will use
@@ -310,7 +268,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
      * 
      * @return ArrayList<Actor> the actors
      */
-    public ArrayList<Actor> getActors() {
+    public List<Actor> getActors() {
         return new ArrayList(Arrays.asList(actors.toArray()));
     }
 
@@ -319,7 +277,7 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
      * 
      * @param actors the actors that are going to be used
      */
-    public void setActors(ArrayList<Actor> actors) {
+    public void setActors(List<Actor> actors) {
         this.actors = new LinkedList<>(actors);
     }
 
@@ -394,11 +352,67 @@ public class InvadersGUI extends Canvas implements Stage, KeyListener {
     }
 
     public void keyPressed(KeyEvent e) {
-
+        //sadly, cannot be implemented
     }
 
     public void keyReleased(KeyEvent e) {
+        //sadly, cannot be implemented
+    }
 
+
+    private void handleActorUpdates() {
+        Iterator<Actor> iterator = actors.iterator();
+        while (iterator.hasNext()) {
+            Actor actor = iterator.next();
+            if (actor.isMarkedForRemoval()) {
+                handleRemoval(iterator, actor);
+            } else {
+                actor.act();
+            }
+        }
+    }
+    
+    private void handleRemoval(Iterator<Actor> iterator, Actor actor) {
+        iterator.remove();
+        if (actor instanceof Monster) {
+            handleMonsterRemoval((Monster) actor);
+        } else if (actor instanceof Ship) {
+            handleShipRemoval((Ship) actor);
+        }
+    }
+    
+    private void handleMonsterRemoval(Monster monster) {
+        if (limitMonster()) {
+            generateMonster(monster.getY());
+        } else {
+            adjustMonsterLimits();
+        }
+    }
+    
+    private void handleShipRemoval(Ship ship) {
+        if ((numberOfMonsters + 3) <= 15) {
+            generateMonster(ship.getY());
+            generateMonster(ship.getY() + 1);
+            generateMonster(ship.getY() - 1);
+            numberOfMonsters += 3;
+        }
+    }
+    
+    private void adjustMonsterLimits() {
+        limited -= 1;
+        if (limited == 0) {
+            limited = 5;
+            numberOfMonsters = 10;
+        }
+    }
+    
+    private void handlePlayerUpdates() {
+        for (Map.Entry<String, Player> entry : players.entrySet()) {
+            Player player = entry.getValue();
+            if (!player.isLoose()) {
+                player.act();
+            }
+        }
     }
 
 }

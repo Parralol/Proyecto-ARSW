@@ -19,6 +19,7 @@ public class Laser extends Actor {
     /**
      * The act for the laser
      */
+    @Override
     public void act() {
         super.act();
         y += BULLET_SPEED;
