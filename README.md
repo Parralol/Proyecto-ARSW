@@ -52,36 +52,60 @@ mvn test
 ```
 this program works with the following tests:
 
-![image](https://github.com/Parralol/Lab01ARSW/assets/110953563/1b5c19d6-0f1d-43bf-b1f4-4fdb767c5844)
+![image](https://github.com/user-attachments/assets/1f7b0d5c-7128-47d5-b9fd-0c678d0b511c)
 
 And a acceptance test
 
 ### Break down into end to end tests
 
-* **testSelectFiles_phy**
+1. **Test Player Addition**
 
-    This test allow us to assure that the selection of files in the phy case works, this will asure that the program reads the files accordingly. 
+    Verify that a player can be added to the game, and that their name and ID are correctly set.
 
-* **testSelectFiles_loc**
-  
-    This test allow us to assure that the selection of files in the loc case works, this will asure that the program reads the files accordingly. 
+2. **Test Player Name Change**
 
-* **testSelectFiles_throwsExceptionForMultipleFiles**
-  
-     This test allow us to assure that the selection of files in both cases works, this will asure that the program reads the files accordingly and only validates one file. 
+    Ensure that a player's name can be changed after being added to the game.
 
-* **testSelectFiles_throwsExceptionForNoFiles**
+3. **Test World Initialization**
 
-  This test allow us to assure that the selection of files in both cases works, this will asure that the program reads the files accordingly and will validate if no file exists.
+    Confirm that the game world initializes correctly, populating the stage with the necessary actors.
 
-* **testSelectFiles_throwsExceptionForInvalidArgument**
+4. **Test World Update**
 
-  Validates if loc or phy is entered, if not it should raise an error.
+    Ensure that the game world updates correctly, maintaining or changing the number of actors based on game logic.
 
-* **testFileHasFourLOC**
+5. **Test Game Over State**
 
-  This test validates if the program calculates correctly the amount of lines of code.
-  
+    Verify that the game transitions to a "game over" state when certain conditions are met, such as player shields reaching zero.
+
+6. **Test Player Retrieval**
+
+    Confirm that players can be retrieved from the game by their ID and that the number of players is tracked accurately.
+
+7. **Test Player Movement**
+
+    Verify that player movement updates their position on the game board correctly based on velocity.
+
+8. **Test Player Collision with Laser**
+
+    Ensure that a player's shields decrease appropriately when colliding with a laser.
+
+9. **Test Player Collision with Monster**
+
+    Confirm that a player's shields decrease by the correct amount when colliding with a monster.
+
+10. **Test Player Firing**
+
+    Verify that firing a bullet adds the bullet actor to the game world.
+
+11. **Test Player Firing Cluster Bomb**
+
+    Ensure that firing a cluster bomb adds multiple bomb actors to the game world and decreases the player's cluster bomb count.
+
+12. **Test Player Lose Condition**
+
+    Confirm that the player is marked as lost if their shields fall below zero.
+
 ### Acceptance test
 
 
