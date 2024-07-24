@@ -39,11 +39,17 @@ public class InvadersController extends TextWebSocketHandler {
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final Map<String, Boolean> playerUpdateSent = new ConcurrentHashMap<>();
     
-    @Autowired
+    private static final String KEY_DOWN = "keydown";
+    
     UserService scores;
 
     Logger log = Logger.getLogger(getClass().getName());
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    
+    @Autowired
+    public InvadersController(UserService scores){
+        this.scores = scores;
+    }
 
     public InvadersController() {
         getInvaders();
@@ -79,15 +85,12 @@ public class InvadersController extends TextWebSocketHandler {
         String clientId = session.getId();
         String payload = message.getPayload();
 
-        //log.log(Level.INFO,() ->"Client " + clientId + " sent: " + payload);
-
         try {
             JSONObject obj = new JSONObject(payload);
             String type = obj.getString("type");
 
             switch (type) {
-                case "keydown":
-                case "keyup":
+                case "keyup", KEY_DOWN:
                     KeyEventDTO press = new KeyEventDTO();
                     press.setKeyCode(obj.getInt("keyCode"));
                     press.setType(type);
@@ -110,7 +113,7 @@ public class InvadersController extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status){
         sessions.remove(session.getId());
     }
 
@@ -123,7 +126,7 @@ public class InvadersController extends TextWebSocketHandler {
                 state = getActorsState(this.invadersGUI.getActors());
                 session.sendMessage(new TextMessage(state));
             } catch (IOException e) {
-                log.log(Level.WARNING, "Error broadcasting state to session " + session.getId(), e);
+                log.log(Level.WARNING, () -> "Error broadcasting state to session " + session.getId() + "  ERROR:\n " + e.getMessage());
             }
         }
     }
@@ -173,12 +176,12 @@ public class InvadersController extends TextWebSocketHandler {
     public void handleKeyEvent(KeyEventDTO keyEventDTO, String id) {
         KeyEvent keyEvent = new KeyEvent(
                 invadersGUI,
-                keyEventDTO.getType().equals("keydown") ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED,
+                keyEventDTO.getType().equals(KEY_DOWN) ? KeyEvent.KEY_PRESSED : KeyEvent.KEY_RELEASED,
                 System.currentTimeMillis(),
                 0,
                 keyEventDTO.getKeyCode(),
                 KeyEvent.CHAR_UNDEFINED);
-        if (keyEventDTO.getType().equals("keydown")) {
+        if (keyEventDTO.getType().equals(KEY_DOWN)) {
             invadersGUI.multiKeyPressed(keyEvent, id);
         } else {
             invadersGUI.multiKeyReleased(keyEvent, id);
@@ -209,12 +212,13 @@ public class InvadersController extends TextWebSocketHandler {
 
     @GetMapping("/send")
     @CrossOrigin
-    private void dbTest() {
+    public void dbTest() {
         Map<String, Player> players = this.invadersGUI.getPlayers();
         for (Map.Entry<String, Player> player : players.entrySet()) {
-            if (player != null && player.getValue().isLoose() && !playerUpdateSent.getOrDefault(player.getValue().getId(), false)) {
+            Boolean xd = !playerUpdateSent.getOrDefault(player.getValue().getId(), false);
+            if (player != null && player.getValue().isLoose() && Boolean.TRUE.equals(xd)) {
                 scores.save(new User(player.getValue().getId(), Integer.toString(player.getValue().getScore()) , player.getValue().getName()));
-                playerUpdateSent.put(player.getValue().getId(), true); // Mark update as sent
+                playerUpdateSent.put(player.getValue().getId(), true);
             }
         }
        log.log(Level.INFO,()->"REQUEST SENT");
@@ -222,7 +226,7 @@ public class InvadersController extends TextWebSocketHandler {
 
     @GetMapping("/scores")
     @CrossOrigin
-    private List<User> getScores(){
+    public List<User> getScores(){
         return scores.findAllUsersOrderByScoreDesc(Sort.by(Direction.DESC, "score"));
     }
 }
